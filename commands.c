@@ -13,6 +13,24 @@ AddressBookList * commandLoad(char * fileName)
      * If the file doesn't exist or corruption is found in the file
      * then NULL is returned.
      */
+/*
+	AddressBookList *list;
+	AddressBookNode *node;
+	char *line[MAX_LINE_LENGTH];
+	FILE * fp;
+
+	list = createAddressBookList();
+
+	..read from file
+	..skip line with #
+	..tokenise the line
+	..id , name
+
+	...the create array is called in this function VVV
+	node = createAddressBookNode();
+	continue tokenise line for telephones
+		addTelephone(node->array, telephone);
+	insertNode(list, node);*/
 
     return NULL;
 }

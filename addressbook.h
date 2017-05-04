@@ -2,6 +2,6 @@
 #define ADDRESSBOOK_H
 
 #include "commands.h"
-#define DASH_LINE "-------------------------------"
+#include <stdio.h>
 
 #endif

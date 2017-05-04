@@ -30,4 +30,10 @@ typedef enum boolean
  **/
 void readRestOfLine();
 
+/** creates a line of character c, of length n
+ *
+ * make sure you free the memory!
+ */
+char* charLine(char c, int n);
+
 #endif

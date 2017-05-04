@@ -17,7 +17,14 @@ AddressBookList * createAddressBookList()
     * Note head, tail and current should all be initialised to NULL.
     */
 
-    return NULL;
+	AddressBookList * list = malloc(sizeof(*list));
+	if(list != NULL) {
+		list->size = 0;
+		list->head = list->tail = list->current = NULL;
+	}
+
+	return list;
+
 }
 
 void freeAddressBookList(AddressBookList * list)
@@ -27,6 +34,7 @@ void freeAddressBookList(AddressBookList * list)
      * 
      * Note the freeAddressBookNode(...) function is used to free a node.
      */
+
 }
 
 AddressBookNode * createAddressBookNode(int id, char * name)
@@ -43,6 +51,13 @@ AddressBookNode * createAddressBookNode(int id, char * name)
     * 
     * Note previousNode and nextNode should both be initialised to NULL.
     */
+
+	/* todo this 
+	AddressBookNode * node = malloc(sizeof(*node));
+	if( node != NULL) {
+		list->size = 0;
+		list->head = list->tail = list->current = NULL;
+	}*/
 
     return NULL;
 }
@@ -65,6 +80,18 @@ Boolean insertNode(AddressBookList * list, AddressBookNode * node)
      * then FALSE is returned and the node is not inserted.
      */
 
+	/*inserts at tail*/
+	if(list->head == NULL) {
+		/* empty list */
+		list->head = list->tail = list->current = node;
+	} else {
+		/* normal operation */
+		list->tail->nextNode = node;
+		node->previousNode = list->tail;
+		list->tail = node;
+	}
+	list->size++;
+
     return FALSE;
 }
 
@@ -81,7 +108,7 @@ Boolean deleteCurrentNode(AddressBookList * list)
     
     return FALSE;
 }
-
+/* use strcopy!! */
 Boolean forward(AddressBookList * list, int forward)
 {
     /**
@@ -91,8 +118,18 @@ Boolean forward(AddressBookList * list, int forward)
      * If the current node cannot be moved forward by that many positions
      * then FALSE is returned and current remains unchanged.
      */
+	int i;
+	AddressBookNode * current = list->current;
 
-    return FALSE;
+	for(i = 0; i < forward; i++) {
+		if(current->nextNode != NULL) {
+			current = current->nextNode;
+		} else {
+			return FALSE;
+		}
+	}
+	list->current = current;
+    return TRUE;
 }
 
 Boolean backward(AddressBookList * list, int backward)
