@@ -22,8 +22,8 @@ char* loadFileText(char* fname) {
 	file = fopen(fname, "r");
 	while(fgets(buffer, sizeof(char) * BUFFER_SIZE, file)) {
 		/*printf("buffer: %s", buffer);*/
-		size++;
-		fileText = realloc(fileText, (size_t)(BUFFER_SIZE * size));
+		/*size++;*/
+		fileText = realloc(fileText, (size_t)(BUFFER_SIZE * ++size));
 		strcat(fileText, buffer);
 
 	}
@@ -45,21 +45,67 @@ void showStudentInformation() {
 	free(line);
 }
 
+void printSize(AddressBookArray * arr, int i) {
+	printf("size: %d\n", (int)sizeof(arr->telephones[i]));
+}
+
 int main(int argc, char ** argv)
 {
-	FILE *file;
-	char buffer[BUFFER_SIZE];
-
-	file = fopen("sml.txt", "r");
-	while(fgets(buffer, BUFFER_SIZE, file)) {
-		printf("buffer: %s", buffer);
-	}
-	fclose(file);
-
+	/*AddressBookArray *array;
+	int i;
+	char *testPhone = "3543252366";*/
+	
+	int nodeCount = 1;
+	int i;
+	char * text;
+	AddressBookList *list;
+	AddressBookNode *tempNode;
+	char tempStr[20];
+	char *testPhone = "3543252366";
 
 	showStudentInformation();
-	printf("%s\n", loadFileText("sml.txt"));
+	text = loadFileText("sml.txt");
+	printf("%s\n", text);
+	free(text);
     printf("> Goodbye. \n\n");
+
+	printf("creating list\n");
+	list = createAddressBookList();
+	printf("creating fake nodes\n");
+	for(i = 0; i < nodeCount; i++) {
+		sprintf(tempStr, "node: %d", i);
+		tempNode = createAddressBookNode(i, tempStr);
+		addTelephone(tempNode->array, "0123456789");
+		addTelephone(tempNode->array, "3423454346");
+		addTelephone(tempNode->array, testPhone);
+		addTelephone(tempNode->array, "3196432827");
+		removeTelephone(tempNode->array, testPhone);
+		insertNode(list, tempNode);
+	}
+	printf("sizeof array: %d\n", (int)sizeof(list->head->array));
+	freeAddressBookList(list);
+
+	/*
+	array = createAddressBookArray();
+	printf("size: %d\n", (int)sizeof(*array));
+	addTelephone(array, "1234567890");
+	addTelephone(array, "0219874353");
+	addTelephone(array, testPhone);
+	addTelephone(array, "8921568302");
+	removeTelephone(array, testPhone);
+	printf("size: %d\n", (int)sizeof(*array));
+
+	printf("int: %d\n", array->size);
+	for(i = 0; i < array->size; i++) {
+		printf("string at %d: %s\n", i, array->telephones[i]);
+		printf("size: %d\n", (int)sizeof(array->telephones[i]));
+		printSize(array, i);
+	}
+
+	freeAddressBookArray(array);
+*/
+
+
 
     return EXIT_SUCCESS;
 }

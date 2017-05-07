@@ -18,13 +18,23 @@ AddressBookList * createAddressBookList()
     */
 
 	AddressBookList * list = malloc(sizeof(*list));
-	if(list != NULL) {
+	if(list != NULL) {/* malloc might return null */
 		list->size = 0;
 		list->head = list->tail = list->current = NULL;
 	}
 
 	return list;
 
+}
+
+void freeAllNodes(AddressBookList *list) {
+	list->current = list->tail;
+
+	while(list->current != list->head) {
+		list->current = list->current->previousNode;
+		freeAddressBookNode(list->current);
+	}
+	freeAddressBookNode(list->head);
 }
 
 void freeAddressBookList(AddressBookList * list)
@@ -34,6 +44,9 @@ void freeAddressBookList(AddressBookList * list)
      * 
      * Note the freeAddressBookNode(...) function is used to free a node.
      */
+
+	freeAllNodes(list);
+	free(list);
 
 }
 
@@ -52,12 +65,14 @@ AddressBookNode * createAddressBookNode(int id, char * name)
     * Note previousNode and nextNode should both be initialised to NULL.
     */
 
-	/* todo this 
 	AddressBookNode * node = malloc(sizeof(*node));
-	if( node != NULL) {
-		list->size = 0;
-		list->head = list->tail = list->current = NULL;
-	}*/
+	if( node != NULL) {/* malloc might return null */
+		node->id = id;
+		strcpy(node->name, name);
+		node->array = createAddressBookArray();
+		node->previousNode = node->nextNode = NULL;
+		return node;
+	}
 
     return NULL;
 }
@@ -69,6 +84,12 @@ void freeAddressBookNode(AddressBookNode * node)
     * 
     * Note the freeAddressBookArray(...) function is used to free the array.
     */
+	freeAddressBookArray(node->array);
+	/*free(node->id);
+	free(node->name);*/
+	node->previousNode = NULL;
+	node->nextNode = NULL;
+	free(node);
 }
 
 Boolean insertNode(AddressBookList * list, AddressBookNode * node)
@@ -108,7 +129,7 @@ Boolean deleteCurrentNode(AddressBookList * list)
     
     return FALSE;
 }
-/* use strcopy!! */
+
 Boolean forward(AddressBookList * list, int forward)
 {
     /**
@@ -141,8 +162,18 @@ Boolean backward(AddressBookList * list, int backward)
     * If the current node cannot be moved backward by that many positions
     * then FALSE is returned and current remains unchanged.
     */
+	int i;
+	AddressBookNode * current = list->current;
 
-    return FALSE;
+	for(i = 0; i < backward; i++) {
+		if(current->previousNode != NULL) {
+			current = current->previousNode;
+		} else {
+			return FALSE;
+		}
+	}
+	list->current = current;
+    return TRUE;
 }
 
 AddressBookNode * findByID(AddressBookList * list, int id)
@@ -152,8 +183,13 @@ AddressBookNode * findByID(AddressBookList * list, int id)
      * 
      * If no node with a matching id exists then NULL is returned.
      */
+	AddressBookNode * node = list->head;
 
-    return NULL;
+	while(node->id != id && node != NULL) {
+		node = node->nextNode;
+	}
+	return node;
+
 }
 
 AddressBookNode * findByName(AddressBookList * list, char * name)
@@ -166,5 +202,11 @@ AddressBookNode * findByName(AddressBookList * list, char * name)
     * and current remains unchanged.
     */
 
-    return NULL;
+	AddressBookNode * node = list->head;
+
+	while(node->name != name && node != NULL) {
+		node = node->nextNode;
+	}
+	return node;
+
 }

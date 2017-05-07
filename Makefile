@@ -1,7 +1,7 @@
 SOURCES=addressbook.c addressbook_list.c addressbook_array.c commands.c helpers.c
 HEADERS=addressbook.h addressbook_list.h addressbook_array.h commands.h helpers.h
 PROGRAM=a.out
-FLAGS=-ansi -pedantic -Wall
+FLAGS=-ansi -pedantic -Wall -g
 
 all:
 	gcc $(FLAGS) -o $(PROGRAM) $(SOURCES)

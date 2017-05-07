@@ -16,8 +16,16 @@ AddressBookArray * createAddressBookArray()
      * 
      * Note telephones should be initialised to NULL.
      */
+	AddressBookArray *array;
 
-    return NULL;
+	array = malloc(sizeof(*array));/*give memory for each value */
+	if(array == NULL) {
+		return NULL;
+	}
+	array->size = 0;
+	array->telephones = NULL;
+	return array;
+
 }
 
 void freeAddressBookArray(AddressBookArray * array)
@@ -25,6 +33,13 @@ void freeAddressBookArray(AddressBookArray * array)
     /**
      * Free's all telephones within the array and the AddressBookArray itself.
      */
+	int i;
+
+	for(i = 0; i < array->size; i++) {
+		free(array->telephones[i]);
+	}
+	free(array->telephones);
+	free(array);
 }
 
 Boolean addTelephone(AddressBookArray * array, char * telephone)
@@ -54,8 +69,27 @@ Boolean addTelephone(AddressBookArray * array, char * telephone)
      * array->telephones[array->size] = newTelephone;
      * array->size++;
      */
+	int pos = array->size;
 
-    return FALSE;
+	/* grow array of pointers */
+    array->telephones = realloc(array->telephones,
+                         sizeof(*array->telephones) * (array->size + 1));
+	if(array->telephones == NULL) {
+		return FALSE;/* no more memory */
+	}
+    array->size++;
+
+	/* create telephone memory */
+    array->telephones[pos] = malloc(sizeof(*array->telephones[pos]) * 
+							TELEPHONE_LENGTH);
+	if(array->telephones[pos] == NULL) {
+		return FALSE;/* no more memory */
+	}
+
+	/* copy telephone into new memory */
+    strcpy(array->telephones[pos], telephone);
+
+	return TRUE;
 }
 
 Boolean removeTelephone(AddressBookArray * array, char * telephone)
@@ -85,8 +119,32 @@ Boolean removeTelephone(AddressBookArray * array, char * telephone)
     * free(array->telephones);
     * array->telephones = NULL;
     */
+	char * telephoneToRemove;
 
-    return FALSE;
+	telephoneToRemove = findTelephone(array, telephone);
+	if(telephoneToRemove == NULL) {
+		return FALSE;/* telephone isn't in array */
+	}
+
+	/* move last telephone to old spot */
+	if(telephoneToRemove != array->telephones[array->size-1])
+		strcpy(telephoneToRemove, array->telephones[array->size-1]);
+
+	/* free last spot */
+	free(array->telephones[array->size-1]);
+
+	/* shrink pointer array */
+    array->telephones = realloc(array->telephones,
+                        sizeof(*array->telephones) * (array->size - 1));
+    array->size--;
+
+	/* account for empty array */
+	if(array->size == 0) {
+		free(array->telephones);
+		array->telephones = NULL;
+	}
+
+    return TRUE;
 }
 
 char * findTelephone(AddressBookArray * array, char * telephone)
@@ -96,6 +154,15 @@ char * findTelephone(AddressBookArray * array, char * telephone)
      * 
      * If no telephone exists then NULL is returned.
      */
+	int i;
+
+	for(i = 0; i < array->size; i++) {
+		/* the strings are in different locations so we cant just compare
+		 * pointers */
+		if(strcmp(array->telephones[i], telephone) == 0) {
+			return array->telephones[i];
+		}
+	}
 
     return NULL;
 }
