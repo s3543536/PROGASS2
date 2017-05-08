@@ -17,3 +17,36 @@ char* charLine(char c, int n) {
 	line[n] = '\0';
 	return line;
 }
+
+void token(char* str, char* delim, char **tokens, int* tokCount) {
+	int max = *tokCount;/*make tokCount the max number of tokens*/
+	*tokCount = 0;
+	/*tokenise the string*/
+	tokens[0] = strtok(str, delim);
+	
+	while(tokens[*tokCount] != NULL && ++(*tokCount) < max) {
+		tokens[*tokCount] = strtok(NULL, delim);
+	}
+}
+
+/* input str and delim, token function creates **tokens */
+char ** h_token(char* str, char* delim) {
+	char ** tokens;
+	int tokIdx = 0;
+
+	/* setup array */
+	tokens = malloc(sizeof(*tokens));
+	/*printf("sizeof(*tokens): %d\n", (int)sizeof(*tokens));*/
+
+	/* start strtok */
+	tokens[0] = strtok(str, delim);
+
+	/* do each token */
+	while(tokens[tokIdx++] != NULL) {
+		tokens = realloc(tokens, sizeof(*tokens) * (tokIdx+1));
+		tokens[tokIdx] = strtok(NULL, delim);
+		/*printf("tokIdx: %d\n", tokIdx);*/
+	}
+
+	return tokens;
+}

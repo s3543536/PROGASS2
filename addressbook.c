@@ -12,24 +12,24 @@
 
 /**
  * returns the contents of the file 'fname'
- */
+ *//*
 char* loadFileText(char* fname) {
 	FILE *file;
 	char buffer[BUFFER_SIZE];
-	char *fileText = NULL;/* realloc needs NULL so it knows to assign new memory*/
+	char *fileText = NULL;
 	unsigned int size = 0;
 
 	file = fopen(fname, "r");
 	while(fgets(buffer, sizeof(char) * BUFFER_SIZE, file)) {
-		/*printf("buffer: %s", buffer);*/
-		/*size++;*/
+		if(buffer[0] == '#')
+			continue;
 		fileText = realloc(fileText, (size_t)(BUFFER_SIZE * ++size));
 		strcat(fileText, buffer);
 
 	}
 	fclose(file);
 	return fileText;
-}
+}*/
 
 void showStudentInformation() {
 	char* name = "Student Name: Angel English";
@@ -57,17 +57,11 @@ int main(int argc, char ** argv)
 	
 	int nodeCount = 1;
 	int i;
-	char * text;
 	AddressBookList *list;
 	AddressBookNode *tempNode;
 	char tempStr[20];
 	char *testPhone = "3543252366";
-
 	showStudentInformation();
-	text = loadFileText("sml.txt");
-	printf("%s\n", text);
-	free(text);
-    printf("> Goodbye. \n\n");
 
 	printf("creating list\n");
 	list = createAddressBookList();
@@ -84,6 +78,11 @@ int main(int argc, char ** argv)
 	}
 	printf("sizeof array: %d\n", (int)sizeof(list->head->array));
 	freeAddressBookList(list);
+
+	list = commandLoad("sml.txt");
+	printf("\nFREEING\n");
+	freeAddressBookList(list);
+
 
 	/*
 	array = createAddressBookArray();

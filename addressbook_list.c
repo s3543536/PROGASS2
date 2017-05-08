@@ -28,10 +28,10 @@ AddressBookList * createAddressBookList()
 }
 
 void freeAllNodes(AddressBookList *list) {
-	list->current = list->tail;
 
-	while(list->current != list->head) {
-		list->current = list->current->previousNode;
+	while(list->tail != list->head) {
+		list->current = list->tail;
+		list->tail = list->current->previousNode;
 		freeAddressBookNode(list->current);
 	}
 	freeAddressBookNode(list->head);
@@ -64,8 +64,8 @@ AddressBookNode * createAddressBookNode(int id, char * name)
     * 
     * Note previousNode and nextNode should both be initialised to NULL.
     */
-
 	AddressBookNode * node = malloc(sizeof(*node));
+
 	if( node != NULL) {/* malloc might return null */
 		node->id = id;
 		strcpy(node->name, name);
@@ -85,8 +85,6 @@ void freeAddressBookNode(AddressBookNode * node)
     * Note the freeAddressBookArray(...) function is used to free the array.
     */
 	freeAddressBookArray(node->array);
-	/*free(node->id);
-	free(node->name);*/
 	node->previousNode = NULL;
 	node->nextNode = NULL;
 	free(node);

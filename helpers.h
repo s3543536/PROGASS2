@@ -36,4 +36,7 @@ void readRestOfLine();
  */
 char* charLine(char c, int n);
 
+void tokenk(char* str, char* delim, char **tokens, int* tokCount);
+char ** h_token(char* str, char* delim);
+
 #endif

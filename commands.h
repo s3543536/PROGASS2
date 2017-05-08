@@ -4,6 +4,7 @@
 #include "addressbook_list.h"
 
 #define MAX_LINE_LENGTH 512
+#define TEL_IDX 2
 
 #define COMMAND_LOAD "load"
 #define COMMAND_UNLOAD "unload"
