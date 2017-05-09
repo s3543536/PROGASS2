@@ -65,6 +65,7 @@ int main(int argc, char ** argv)
 
 	printf("creating list\n");
 	list = createAddressBookList();
+	commandDisplay(list);
 	printf("creating fake nodes\n");
 	for(i = 0; i < nodeCount; i++) {
 		sprintf(tempStr, "node: %d", i);
@@ -77,6 +78,7 @@ int main(int argc, char ** argv)
 		insertNode(list, tempNode);
 	}
 	printf("sizeof array: %d\n", (int)sizeof(list->head->array));
+	commandDisplay(list);
 	freeAddressBookList(list);
 
 	list = commandLoad("sml.txt");

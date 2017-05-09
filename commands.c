@@ -148,7 +148,7 @@ int getLongestName(AddressBookList * list) {
 		length = maxInt(length, strlen(node->name));
 		node = node->nextNode;
 	}
-	return length;
+	return maxInt(length, strlen("Name"));
 }
 
 #define POSLEN 3
