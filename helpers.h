@@ -35,8 +35,12 @@ void readRestOfLine();
  * make sure you free the memory!
  */
 char* charLine(char c, int n);
+void printCharLine(char c, int n);
 
 void tokenk(char* str, char* delim, char **tokens, int* tokCount);
 char ** h_token(char* str, char* delim);
+
+int maxInt(int a, int b);
+int minInt(int a, int b);
 
 #endif

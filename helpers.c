@@ -10,12 +10,32 @@ void readRestOfLine()
     clearerr(stdin);
 }
 
+int maxInt(int a, int b) {
+	a -= b;
+	a &= (~a) >> 31;
+	a += b;
+	return a;
+}
+
+int minInt(int a, int b) {
+	a -= b;
+	a &= a >> 31;
+	a += b;
+	return a;
+}
+
 char* charLine(char c, int n) {
 	char* line;
 	line = malloc(sizeof(c) * (n+1));
 	memset(line, (int)c, sizeof(char) * (n+1));
 	line[n] = '\0';
 	return line;
+}
+
+void printCharLine(char c, int n) {
+	char* line = charLine(c, n);
+	printf("%s\n", line);
+	free(line);
 }
 
 void token(char* str, char* delim, char **tokens, int* tokCount) {

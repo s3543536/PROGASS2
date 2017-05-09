@@ -5,6 +5,27 @@
 * meaning printf's are NOT to be present in this file.
 */
 
+char * h_concatPhones(AddressBookArray * array) {
+	int commasLen = (array->size-1) * 2;
+	int allNumsLen = (TELEPHONE_LENGTH-1)*array->size + NULL_SPACE;
+	char * output = malloc(maxInt(commasLen + allNumsLen, 2));
+	int i;
+
+	if(array->size == 0) {
+		sprintf(output, " ");
+		return output;
+	}/* else if(array->size == 1) {
+		sprintf(output, "%s", telephones[0]);
+		return output;
+	}*/
+
+	sprintf(output, "%s", array->telephones[0]);
+	for(i = 1; i < array->size; i++) {
+		sprintf(output, "%s, %s", output, array->telephones[i]);
+	}
+	return output;
+}
+
 AddressBookArray * createAddressBookArray()
 {
     /**

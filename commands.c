@@ -140,8 +140,69 @@ AddressBookList * commandLoad(char * fileName)
 void commandUnload(AddressBookList * list)
 { }
 
-void commandDisplay(AddressBookList * list)
-{ }
+int getLongestName(AddressBookList * list) {
+	AddressBookNode * node = list->head;
+	int length = 0;
+
+	while(node != NULL) {
+		length = maxInt(length, strlen(node->name));
+		node = node->nextNode;
+	}
+	return length;
+}
+
+#define POSLEN 3
+#define SERIALLEN 6
+#define IDLEN 3
+#define TELEPHONELEN 10
+
+/* " | " * 4
+   "| "
+   " |"
+*/
+#define SPACINGLEN 16
+
+void commandDisplay(AddressBookList * list) {
+	int serial = 0;
+	AddressBookNode * node = list->head;
+	int nameLen = getLongestName(list);
+	int headerLen = nameLen+POSLEN+SERIALLEN+IDLEN+TELEPHONELEN+SPACINGLEN;
+	char * posStr = "";
+	char * phones;
+
+	printCharLine('-', headerLen);
+	printf("| Pos | Serial | ID  | %-*s | Telephone  |\n", nameLen, "Name");
+	printCharLine('-', headerLen);
+
+	if(node == NULL) {
+		/* print empty line */
+		printf("| %*s |\n", headerLen - 4, "");
+	} else {
+		while(node != NULL) {
+			serial++;
+			if(node == list->current)
+				posStr = "CUR";
+			else
+				posStr = "";
+
+			phones = h_concatPhones(node->array);
+			printf("| %-*s | %-*d | %-*d | %-*s | %s\n",
+					POSLEN, posStr,
+					SERIALLEN, serial,
+					IDLEN, node->id,
+					nameLen, node->name,
+					phones);
+			free(phones);
+
+			node = node->nextNode;
+		}
+	}
+	printCharLine('-', headerLen);
+	printf("| Total phone book entries: %-*d |\n", 
+			headerLen - (int)strlen("| Total phone book entries:  |"), 
+			serial);
+	printCharLine('-', headerLen);
+}
 
 void commandForward(AddressBookList * list, int moves)
 { }

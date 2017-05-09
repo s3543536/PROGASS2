@@ -80,6 +80,7 @@ int main(int argc, char ** argv)
 	freeAddressBookList(list);
 
 	list = commandLoad("sml.txt");
+	commandDisplay(list);
 	printf("\nFREEING\n");
 	freeAddressBookList(list);
 

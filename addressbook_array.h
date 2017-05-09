@@ -19,4 +19,6 @@ Boolean removeTelephone(AddressBookArray * array, char * telephone);
 
 char * findTelephone(AddressBookArray * array, char * telephone);
 
+char * h_concatPhones(AddressBookArray * array);
+
 #endif
