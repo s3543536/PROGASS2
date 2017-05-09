@@ -7,27 +7,38 @@
 
 
 
-/**
- * returns the contents of the file 'fname' TODO
- */
-Boolean validateFile(FILE * file) {
-	/*char buffer[MAX_LINE_LENGTH];
-	unsigned int size = 0;
-
-	while(fgets(buffer, sizeof(char) * MAX_LINE_LENGTH, file)) {
-		if(buffer[0] == '#')
-			continue;
-		fileText = realloc(fileText, (size_t)(MAX_LINE_LENGTH * ++size));
-		strcat(fileText, buffer);
-	}
-
-	fclose(file);
-	return fileText;*/
-	return TRUE;
+Boolean validatePhoneNumber(char * number) {
+	return TRUE;/* TODO */
 }
 
-Boolean validateLine(char ** line) {
-	return TRUE;/* TODO */
+/* 
+ * checks each token
+ *
+ * the last pointer in the array is set to NULL
+ */
+Boolean validateLine(char ** tokens) {
+	int i;
+
+	/* make sure the id and name fields exist */
+	if(tokens[0] == NULL)
+		return FALSE;
+	if(tokens[1] == NULL)
+		return FALSE;
+
+	/* validate id TODO*/
+
+	/* validate name TODO*/
+
+	i = 2;/* phone numbers start at 2 for this file format */
+	while(tokens[i] != NULL) {
+		/* validate each phone number */
+		if(!validatePhoneNumber(tokens[i]))
+			return FALSE;
+		i++;
+	}
+
+	/* all tests passed */
+	return TRUE;
 }
 
 void printToks(char ** toks) {
@@ -97,7 +108,7 @@ AddressBookList * commandLoad(char * fileName)
 		printf("tokens: ");
 		printToks(tokens);
 
-		/* validate token */
+		/* validate tokens */
 		if(!validateLine(tokens)) {
 			printf("File: %s is Corrupt", fileName);
 			fclose(file);
