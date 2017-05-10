@@ -17,6 +17,9 @@ typedef enum boolean
 #define NEW_LINE_SPACE 1
 #define NULL_SPACE 1
 
+/* its a signed int, so 10 */
+#define MAX_ID_LENGTH 10
+
 /**
  * This is used to compensate for the extra character spaces taken up by
  * the '\n' and '\0' when input is read through fgets().

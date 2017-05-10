@@ -81,7 +81,7 @@ int main(int argc, char ** argv)
 	commandDisplay(list);
 	freeAddressBookList(list);
 
-	list = commandLoad("sml.txt");
+	list = commandLoad("lrg.txt");
 	commandDisplay(list);
 	/*printf("\nFREEING\n");*/
 

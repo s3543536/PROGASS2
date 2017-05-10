@@ -90,7 +90,7 @@ AddressBookList * commandLoad(char * fileName)
 
 	adb = createAddressBookList();
 
-	printf("opening the file\n");
+	printf("opening the file: %s\n", fileName);
 	file = fopen(fileName, "r");
 	while(fgets(line, size, file)) {
 		/* remove comments */
@@ -135,6 +135,7 @@ AddressBookList * commandLoad(char * fileName)
 	}
 	printf("loading...\n");
 	fclose(file);
+	printf("closing the file\n");
 	free(line);
 
 	printf("%d phone book entries have been loaded from %s\n", count, fileName);
@@ -155,9 +156,23 @@ int getLongestName(AddressBookList * list) {
 	return maxInt(length, strlen("Name"));
 }
 
+int getLongestID(AddressBookList * list) {
+	AddressBookNode * node = list->head;
+	int maxID = 0;
+	char numStr[MAX_ID_LENGTH + NULL_SPACE];
+
+	while(node != NULL) {
+		maxID = maxInt(maxID, node->id);
+		node = node->nextNode;
+	}
+
+	sprintf(numStr, "%d", maxID);
+
+	return maxInt(strlen(numStr), strlen("ID"));
+}
+
 #define POSLEN 3
 #define SERIALLEN 6
-#define IDLEN 3
 #define TELEPHONELEN 10
 
 /* " | " * 4
@@ -170,12 +185,15 @@ void commandDisplay(AddressBookList * list) {
 	int serial = 0;
 	AddressBookNode * node = list->head;
 	int nameLen = getLongestName(list);
-	int headerLen = nameLen+POSLEN+SERIALLEN+IDLEN+TELEPHONELEN+SPACINGLEN;
+	int idLen = getLongestID(list);
+	int headerLen = nameLen+POSLEN+SERIALLEN+idLen+TELEPHONELEN+SPACINGLEN;
 	char * posStr = "";
 	char * phones;
 
 	printCharLine('-', headerLen);
-	printf("| Pos | Serial | ID  | %-*s | Telephone  |\n", nameLen, "Name");
+	printf("| Pos | Serial | %-*s | %-*s | Telephone  |\n", 
+			idLen, "ID", 
+			nameLen, "Name");
 	printCharLine('-', headerLen);
 
 	if(node == NULL) {
@@ -193,7 +211,7 @@ void commandDisplay(AddressBookList * list) {
 			printf("| %-*s | %-*d | %-*d | %-*s | %s\n",
 					POSLEN, posStr,
 					SERIALLEN, serial,
-					IDLEN, node->id,
+					idLen, node->id,
 					nameLen, node->name,
 					phones);
 			free(phones);
