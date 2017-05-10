@@ -63,10 +63,10 @@ int main(int argc, char ** argv)
 	char *testPhone = "3543252366";
 	showStudentInformation();
 
-	printf("creating list\n");
+	/*printf("creating list\n");*/
 	list = createAddressBookList();
 	commandDisplay(list);
-	printf("creating fake nodes\n");
+	/*printf("creating fake nodes\n");*/
 	for(i = 0; i < nodeCount; i++) {
 		sprintf(tempStr, "node: %d", i);
 		tempNode = createAddressBookNode(i, tempStr);
@@ -77,13 +77,14 @@ int main(int argc, char ** argv)
 		removeTelephone(tempNode->array, testPhone);
 		insertNode(list, tempNode);
 	}
-	printf("sizeof array: %d\n", (int)sizeof(list->head->array));
+	/*printf("sizeof array: %d\n", (int)sizeof(list->head->array));*/
 	commandDisplay(list);
 	freeAddressBookList(list);
 
 	list = commandLoad("sml.txt");
 	commandDisplay(list);
-	printf("\nFREEING\n");
+	/*printf("\nFREEING\n");*/
+
 	freeAddressBookList(list);
 
 

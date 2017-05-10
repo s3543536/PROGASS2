@@ -86,10 +86,11 @@ AddressBookList * commandLoad(char * fileName)
 	int id;
 	char* endptr;
 	int i;
+	int count = 0;
 
-	printf("\nloading...\n");
 	adb = createAddressBookList();
 
+	printf("opening the file\n");
 	file = fopen(fileName, "r");
 	while(fgets(line, size, file)) {
 		/* remove comments */
@@ -99,14 +100,14 @@ AddressBookList * commandLoad(char * fileName)
 		/* remove \n */
 		strtok(line, "\n");
 
-		printf("\nline:   %s\n", line);
+		/*printf("\nline:   %s\n", line);*/
 
 		/* token line */
 		tokens = h_token(line, ",");
 
 		/*printf("tokens: %-4s%-20s%-11s\n", tokens[0], tokens[1], tokens[2]);*/
-		printf("tokens: ");
-		printToks(tokens);
+		/*printf("tokens: ");
+		printToks(tokens);*/
 
 		/* validate tokens */
 		if(!validateLine(tokens)) {
@@ -130,10 +131,13 @@ AddressBookList * commandLoad(char * fileName)
 		insertNode(adb, node);
 
 		free(tokens);
+		count++;
 	}
+	printf("loading...\n");
 	fclose(file);
 	free(line);
 
+	printf("%d phone book entries have been loaded from %s\n", count, fileName);
     return adb;
 }
 
