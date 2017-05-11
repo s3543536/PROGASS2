@@ -275,18 +275,73 @@ void commandDelete(AddressBookList * list)
 void commandRemove(AddressBookList * list, char * telephone)
 { }
 
-typedef struct {
-	int * head;
-	int * tail;
-} int_part;
+int partsize(Part *part) {
+	AddressBookNode *curr = part->head;
+	int i = 0;
 
-void quickSort(int* ints, int size) {
-	int_part* intpart;
-	int partsize;
+	if(part->head == NULL)
+		return 0;
 
-	/* allocate first parition */
-	intpart = malloc(sizeof(*intpart));
-	partsize = 1;
+	do {
+		if(curr == NULL) {
+			printf("WARNING: Broken List\n");
+			return -1;/* broken list */
+		}
+		curr = curr->nextNode;
+		i++;
+	} while(curr != part->tail);
+	return i;
+}
+
+Boolean moveBefore(AddressBookNode * pos, AddressBookNode * toMove, Part * part) {
+	printf("putting %s before %s\t", toMove->name, pos->name);
+	printf("\t%s was before %s\t\n", toMove->previousNode->name, toMove->name);
+	/* stitch up toMove */
+	if(toMove->nextNode == NULL) {
+		/* at tail */
+		part->tail = toMove->previousNode;/* make tail work */
+		toMove->previousNode->nextNode = NULL;
+	} else if(toMove->previousNode == NULL) {
+		/* at head */
+		part->head = toMove->nextNode;/* make head work */
+		toMove->nextNode->previousNode = NULL;
+	} else {
+		/* in middle */
+		toMove->nextNode->previousNode = toMove->previousNode;
+		toMove->previousNode->nextNode = toMove->nextNode;
+	}
+	/* edit toMove ptrs */
+	toMove->nextNode = pos;
+	toMove->previousNode = pos->previousNode;/* this works at head too*/
+	/* edit toMove surroundings ptrs */
+	if(pos->previousNode == NULL) {
+		/* at head */
+		part->head = pos;/* make head work */
+		pos->previousNode = toMove;
+	} else {
+		/* in middle */
+		pos->previousNode->nextNode = toMove;
+		pos->previousNode = toMove;
+	}
+	return TRUE;
+}
+
+/**
+ * this assumes nodea comes before nodeb
+ */
+int nodeDiff(AddressBookNode * nodea, AddressBookNode * nodeb) {
+	int i = 0;
+
+	while(nodeb != nodea) {
+		nodeb = nodeb->previousNode;
+		i++;
+		if(i > 22) {
+			printf("ERROR: nodediff looped too many times");
+			return -1;
+		}
+	}
+
+	return i;
 }
 
 void commandSort(
@@ -296,6 +351,76 @@ void commandSort(
     /* Sort the nodes within list in ascending order using the
      * provided sort function to compare nodes.
      */
+	Part * parts;
+	int partsize = 0;
+	Part * currpart;
+	AddressBookNode * pivot;
+	AddressBookNode * currnode;
+	AddressBookNode * nextnode;
+	int sortInt;
+	int diffa;
+	int diffb;
+
+	int a;
+	int b;
+
+	/* allocate first parition */
+	parts = malloc(sizeof(*parts) * ++partsize);
+	parts[0].head = list->head;
+	parts[0].tail = list->tail;
+
+	a = 0;
+	while(partsize > 0) {
+		printf("a%d\n", a++);
+		/* choose part */
+		currpart = &parts[partsize-1];/* last part */
+		/* choose pivot */
+		pivot = currpart->head;
+		/* sort around pivot (its a linked list so pivot can be the wall) */
+		currnode = currpart->head;
+		nextnode = currnode->nextNode;
+		do {
+			currnode = nextnode;
+			if(nextnode != NULL) {
+				nextnode = nextnode->nextNode;
+			}
+			sortInt = sort(currnode, pivot);
+			if(sortInt < 0) {
+				/* currnode is less than pivot */
+				if(!moveBefore(pivot, currnode, currpart))
+					printf("can't move currnode before pivot\n");
+			}
+		} while(nextnode != NULL);
+
+		/* grow part array */
+		diffa = nodeDiff(currpart->head, pivot);
+		diffb = nodeDiff(pivot, currpart->tail);
+		
+		if(diffa > 1 && diffb > 1) {
+			/* grow array */
+			parts = realloc(parts, sizeof(*parts) * ++partsize);
+			parts[partsize-2].head = currpart->head;
+			parts[partsize-2].tail = pivot->previousNode;
+
+			parts[partsize-1].head = pivot->nextNode;
+			parts[partsize-1].tail = currpart->tail;
+		} else if(diffa > 1) {
+			/* array stays the same */
+			parts[partsize-1].head = currpart->head;
+			parts[partsize-1].tail = pivot->previousNode;
+		} else if(diffb > 1) {
+			/* array stays the same */
+			parts[partsize-1].head = pivot->nextNode;
+			parts[partsize-1].tail = currpart->tail;
+		} else {
+			/* shrink array */
+			--partsize;
+			if(partsize == 0)
+				free(parts);
+			else
+				parts = realloc(parts, sizeof(*parts) * partsize);
+		}
+	}
 }
 
 int compareName(const void * node, const void * otherNode)
@@ -306,8 +431,8 @@ int compareName(const void * node, const void * otherNode)
      * return 0 when the names are equal.
      * return > 0 when node name is bigger than otherNode name.
      */
-	return strcmp((*(AddressBookNode*)node)->name, 
-			(*(AddressBookNode*)otherNode)->name);
+	return strcmp(((AddressBookNode*)node)->name, 
+			((AddressBookNode*)otherNode)->name);
 }
 
 int compareID(const void * node, const void * otherNode)
@@ -318,7 +443,7 @@ int compareID(const void * node, const void * otherNode)
      * return 0 when the ids are equal.
      * return > 0 when node id is bigger than otherNode id.
      */
-	return (*(AddressBookNode*)node)->id - (*(AddressBookNode*)otherNode)->id);
+	return ((AddressBookNode*)node)->id - ((AddressBookNode*)otherNode)->id;
 }
 
 void commandSave(AddressBookList * list, char * fileName)

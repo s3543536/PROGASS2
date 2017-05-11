@@ -22,6 +22,11 @@
 #define COMMAND_SAVE "save"
 #define COMMAND_QUIT "quit"
 
+typedef struct part {
+	AddressBookNode *head;
+	AddressBookNode *tail;
+} Part;
+
 AddressBookList * commandLoad(char * fileName);
 void commandUnload(AddressBookList * list);
 void commandDisplay(AddressBookList * list);

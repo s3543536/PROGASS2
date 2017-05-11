@@ -87,10 +87,13 @@ int main(int argc, char ** argv)
 	commandDisplay(list);
 	/*printf("\nFREEING\n");*/
 
-	freeAddressBookList(list);
-
-	list = createAddressBookList();
+	commandSort(list, compareName);
 	commandDisplay(list);
+
+	freeAddressBookList(list);
+/*
+	list = createAddressBookList();
+	commandDisplay(list);*/
 
 	/*
 	array = createAddressBookArray();
