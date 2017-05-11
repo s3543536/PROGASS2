@@ -276,6 +276,20 @@ void commandDelete(AddressBookList * list)
 void commandRemove(AddressBookList * list, char * telephone)
 { }
 
+typedef struct {
+	int * head;
+	int * tail;
+} int_part;
+
+void quickSort(int* ints, int size) {
+	int_part* intpart;
+	int partsize;
+
+	/* allocate first parition */
+	intpart = malloc(sizeof(*intpart));
+	partsize = 1;
+}
+
 void commandSort(
     AddressBookList * list,
     int sort(const void * node, const void * otherNode))
@@ -293,7 +307,8 @@ int compareName(const void * node, const void * otherNode)
      * return 0 when the names are equal.
      * return > 0 when node name is bigger than otherNode name.
      */
-    return 0;
+	return strcmp((*(AddressBookNode*)node)->name, 
+			(*(AddressBookNode*)otherNode)->name);
 }
 
 int compareID(const void * node, const void * otherNode)
@@ -304,7 +319,7 @@ int compareID(const void * node, const void * otherNode)
      * return 0 when the ids are equal.
      * return > 0 when node id is bigger than otherNode id.
      */
-    return 0;
+	return (*(AddressBookNode*)node)->id - (*(AddressBookNode*)otherNode)->id);
 }
 
 void commandSave(AddressBookList * list, char * fileName)
