@@ -7,8 +7,31 @@
 
 
 
-Boolean validatePhoneNumber(char * number) {
-	return TRUE;/* TODO */
+void printToks(char ** toks) {
+	int i = 0;
+
+	do {
+		printf("%-11s", toks[i]);
+	} while(toks[i++] != NULL);
+	printf("\n");
+}
+
+int validatePhoneNumber(char * number) {
+	char* endptr = NULL;
+	printf("validating telephone...\n");
+
+	if(strlen(number) != TELEPHONE_LENGTH - NULL_SPACE)
+		return FALSE;
+
+	/* try to convert to int */
+	strtol(number, &endptr, 10);
+
+	/* endpointer gets set if it can't validate */
+	if(endptr != NULL)
+		return FALSE;
+
+	printf("success!\n");
+	return TRUE;
 }
 
 /* 
@@ -18,6 +41,10 @@ Boolean validatePhoneNumber(char * number) {
  */
 Boolean validateLine(char ** tokens) {
 	int i;
+	int id;
+	char* endptr = NULL;
+	int namelen;
+
 
 	/* make sure the id and name fields exist */
 	if(tokens[0] == NULL)
@@ -25,9 +52,17 @@ Boolean validateLine(char ** tokens) {
 	if(tokens[1] == NULL)
 		return FALSE;
 
-	/* validate id TODO*/
+	/* validate id */
+	id = strtol(tokens[0], &endptr, 10);
+	if(endptr != NULL)
+		return FALSE;
+	if(id < NODE_MINIMUM_ID)
+		return FALSE;
 
-	/* validate name TODO*/
+	/* validate name */
+	namelen = strlen(tokens[1]);
+	if(namelen > NAME_LENGTH || namelen <= 0)
+		return FALSE;
 
 	i = 2;/* phone numbers start at 2 for this file format */
 	while(tokens[i] != NULL) {
@@ -39,16 +74,6 @@ Boolean validateLine(char ** tokens) {
 
 	/* all tests passed */
 	return TRUE;
-}
-
-void printToks(char ** toks) {
-	int i = 0;
-
-	while(toks[i] != NULL) {
-		printf("%-11s", toks[i]);
-		i++;
-	}
-	printf("\n");
 }
 
 AddressBookList * commandLoad(char * fileName)
@@ -84,15 +109,18 @@ AddressBookList * commandLoad(char * fileName)
 	char * line = malloc(sizeof(*line) * size);
 	char ** tokens;
 	int id;
-	char* endptr;
+	char* endptr = NULL;
 	int i;
 	int count = 0;
+	int err_line_count = 0;
 
 	adb = createAddressBookList();
 
 	printf("opening the file: %s\n", fileName);
 	file = fopen(fileName, "r");
+	printf("loading...\n");
 	while(fgets(line, size, file)) {
+		err_line_count++;
 		/* remove comments */
 		if(line[0] == '#')
 			continue;
@@ -105,14 +133,14 @@ AddressBookList * commandLoad(char * fileName)
 		/* token line */
 		tokens = h_token(line, ",");
 
-		/*printf("tokens: %-4s%-20s%-11s\n", tokens[0], tokens[1], tokens[2]);*/
-		/*printf("tokens: ");
-		printToks(tokens);*/
-
 		/* validate tokens */
 		if(!validateLine(tokens)) {
-			printf("File: %s is Corrupt", fileName);
+			printf("File: %s is Corrupt\nat line: %d\n", 
+					fileName, err_line_count);
 			fclose(file);
+			free(line);
+			free(tokens);
+			freeAddressBookList(adb);
 			return NULL;
 		}
 
@@ -133,17 +161,18 @@ AddressBookList * commandLoad(char * fileName)
 		free(tokens);
 		count++;
 	}
-	printf("loading...\n");
-	fclose(file);
 	printf("closing the file\n");
-	free(line);
+	fclose(file);
 
+	free(line);
 	printf("%d phone book entries have been loaded from %s\n", count, fileName);
     return adb;
 }
 
 void commandUnload(AddressBookList * list)
-{ }
+{
+	freeAddressBookList(list);
+}
 
 int getLongestName(AddressBookList * list) {
 	AddressBookNode * node = list->head;

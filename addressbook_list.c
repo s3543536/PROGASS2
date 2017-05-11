@@ -27,16 +27,6 @@ AddressBookList * createAddressBookList()
 
 }
 
-void freeAllNodes(AddressBookList *list) {
-
-	while(list->tail != list->head) {
-		list->current = list->tail;
-		list->tail = list->current->previousNode;
-		freeAddressBookNode(list->current);
-	}
-	freeAddressBookNode(list->head);
-}
-
 void freeAddressBookList(AddressBookList * list)
 {
     /**
@@ -45,7 +35,15 @@ void freeAddressBookList(AddressBookList * list)
      * Note the freeAddressBookNode(...) function is used to free a node.
      */
 
-	freeAllNodes(list);
+	if(list->head != NULL) {
+		while(list->tail != list->head) {
+			list->current = list->tail;
+			list->tail = list->current->previousNode;
+			freeAddressBookNode(list->current);
+		}
+		freeAddressBookNode(list->head);
+	}
+
 	free(list);
 
 }

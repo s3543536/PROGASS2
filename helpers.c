@@ -61,9 +61,11 @@ char ** h_token(char* str, char* delim) {
 	/* start strtok */
 	tokens[0] = strtok(str, delim);
 
-	/* do each token */
+	/* if previous is not null, increment and do next */
 	while(tokens[tokIdx++] != NULL) {
+		/* grow tokens array */
 		tokens = realloc(tokens, sizeof(*tokens) * (tokIdx+1));
+		/* set new spot to contain pointer */
 		tokens[tokIdx] = strtok(NULL, delim);
 		/*printf("tokIdx: %d\n", tokIdx);*/
 	}
