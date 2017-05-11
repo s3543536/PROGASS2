@@ -18,7 +18,6 @@ void printToks(char ** toks) {
 
 int validatePhoneNumber(char * number) {
 	char* endptr = NULL;
-	printf("validating telephone...\n");
 
 	if(strlen(number) != TELEPHONE_LENGTH - NULL_SPACE)
 		return FALSE;
@@ -27,10 +26,9 @@ int validatePhoneNumber(char * number) {
 	strtol(number, &endptr, 10);
 
 	/* endpointer gets set if it can't validate */
-	if(endptr != NULL)
+	if(endptr != NULL && *endptr != 0)
 		return FALSE;
 
-	printf("success!\n");
 	return TRUE;
 }
 
@@ -45,7 +43,6 @@ Boolean validateLine(char ** tokens) {
 	char* endptr = NULL;
 	int namelen;
 
-
 	/* make sure the id and name fields exist */
 	if(tokens[0] == NULL)
 		return FALSE;
@@ -54,8 +51,10 @@ Boolean validateLine(char ** tokens) {
 
 	/* validate id */
 	id = strtol(tokens[0], &endptr, 10);
-	if(endptr != NULL)
+	if(endptr != NULL && *endptr != 0) {
+		printf("end pointer: |%s|%d|\n", endptr, (int)*endptr);
 		return FALSE;
+	}
 	if(id < NODE_MINIMUM_ID)
 		return FALSE;
 

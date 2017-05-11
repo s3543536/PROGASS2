@@ -55,19 +55,19 @@ int main(int argc, char ** argv)
 	int i;
 	char *testPhone = "3543252366";*/
 	
-	int nodeCount = 1;
-	int i;
 	AddressBookList *list;
+	/*int nodeCount = 1;
+	int i;
 	AddressBookNode *tempNode;
 	char tempStr[20];
-	char *testPhone = "3543252366";
+	char *testPhone = "3543252366";*/
 	showStudentInformation();
 
 	/*printf("creating list\n");*/
-	list = createAddressBookList();
-	commandDisplay(list);
+	/*list = createAddressBookList();
+	commandDisplay(list);*/
 	/*printf("creating fake nodes\n");*/
-	for(i = 0; i < nodeCount; i++) {
+	/*for(i = 0; i < nodeCount; i++) {
 		sprintf(tempStr, "node: %d", i);
 		tempNode = createAddressBookNode(i, tempStr);
 		addTelephone(tempNode->array, "0123456789");
@@ -76,10 +76,10 @@ int main(int argc, char ** argv)
 		addTelephone(tempNode->array, "3196432827");
 		removeTelephone(tempNode->array, testPhone);
 		insertNode(list, tempNode);
-	}
+	}*/
 	/*printf("sizeof array: %d\n", (int)sizeof(list->head->array));*/
-	commandDisplay(list);
-	freeAddressBookList(list);
+	/*commandDisplay(list);
+	freeAddressBookList(list);*/
 
 	list = commandLoad("sml.txt");
 	if(list == NULL)
@@ -89,6 +89,8 @@ int main(int argc, char ** argv)
 
 	freeAddressBookList(list);
 
+	list = createAddressBookList();
+	commandDisplay(list);
 
 	/*
 	array = createAddressBookArray();
