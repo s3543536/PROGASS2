@@ -26,6 +26,7 @@ typedef struct part {
 	AddressBookNode *head;
 	AddressBookNode *tail;
 } Part;
+void commandDisplayV(AddressBookList * list);
 
 AddressBookList * commandLoad(char * fileName);
 void commandUnload(AddressBookList * list);

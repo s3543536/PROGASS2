@@ -84,11 +84,11 @@ int main(int argc, char ** argv)
 	list = commandLoad("sml.txt");
 	if(list == NULL)
 		return EXIT_FAILURE;
-	commandDisplay(list);
+	commandDisplayV(list);
 	/*printf("\nFREEING\n");*/
 
 	commandSort(list, compareName);
-	commandDisplay(list);
+	commandDisplayV(list);
 
 	freeAddressBookList(list);
 /*
