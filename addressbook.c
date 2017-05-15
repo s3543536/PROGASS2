@@ -88,7 +88,9 @@ int main(int argc, char ** argv)
 	/*printf("\nFREEING\n");*/
 
 	commandSort(list, compareName);
-	commandDisplayV(list);
+	commandDisplay(list);
+	commandSort(list, compareID);
+	commandDisplay(list);
 
 	freeAddressBookList(list);
 /*

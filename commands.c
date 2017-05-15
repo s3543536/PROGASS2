@@ -359,14 +359,15 @@ Boolean moveBefore(AddressBookNode * pos, AddressBookNode * toMove, Part * part)
 	printf("putting %s before %s\t", toMove->name, pos->name);
 	printf("\t%s was before %s\t\n", toMove->previousNode->name, toMove->name);
 
+	/* putting aron before alice */
 	/* check part edge cases */
 	if(part->head == toMove) {
 		printf("you shouldn't be moving part head before something\n");
 		part->head = toMove->nextNode;
 	}
 	if(part->tail == toMove) {
+		printf("tomove %s is tail\tnew tail: %s \n", toMove->name, toMove->previousNode->name);
 		part->tail = toMove->previousNode;
-		printf("tomove is tail\n");
 	} else {
 		printf("part tail: %s\ttoMove: %s\n", part->tail->name, toMove->name);
 	}
@@ -412,15 +413,17 @@ Boolean moveBefore(AddressBookNode * pos, AddressBookNode * toMove, Part * part)
 int nodeDiff(AddressBookNode * nodea, AddressBookNode * nodeb) {
 	int i = 0;
 
+	printf("\nfrom %s to %s\n", nodeb->name, nodea->name);
 	while(nodeb != nodea) {
 		if(nodeb == NULL) {
-			printf("ERROR: nodediff got to head before finding nodeA\n");
+			printf("\n\t\tERROR: nodediff got to NULL (list head) before finding nodeA\t%d\n", i);
 			return -1;
 		}
+		printf("%s\t", nodeb->name);
 		nodeb = nodeb->previousNode;
 		i++;
 		if(i > 22) {
-			printf("ERROR: nodediff looped too many times");
+			printf("\t\tERROR: nodediff looped too many times");
 			return -1;
 		}
 	}
@@ -456,9 +459,11 @@ void commandSort(
 	AddressBookNode * pivot;
 	AddressBookNode * currnode;
 	AddressBookNode * nextnode;
+	AddressBookNode * tempnode;
 	int sortInt;
 	int diffa;
 	int diffb;
+	int b = 0;
 
 	/* allocate first parition */
 	parts = malloc(sizeof(*parts) * ++partsize);
@@ -473,59 +478,65 @@ void commandSort(
 		currpart = &parts[partsize-1];/* last part */
 		/* choose pivot */
 		pivot = currpart->head;
+		printf("\th:%s\tp:%s\tt:%s\t", currpart->head->name, pivot->name, currpart->tail->name);
 		/* sort around pivot (its a linked list so pivot can be the wall) */
 		currnode = currpart->head;
 		nextnode = currnode->nextNode;
+		b = 0;
 		do {
 			currnode = nextnode;
 			if(nextnode != NULL) {
 				nextnode = currnode->nextNode;
 			}
 			sortInt = sort(currnode, pivot);
+			printf("search count: %d\n", b++);
 			if(sortInt < 0) {
 				/* currnode is less than pivot */
 				if(!moveBefore(pivot, currnode, currpart))
-					printf("can't move currnode before pivot\n");
+					printf("\t\tERROR: can't move currnode before pivot\n");
 			}
 		} while(nextnode != NULL);
 
 		/* grow part array */
-		printf("diffa\n");
+		printf("diffa\t");
 		diffa = nodeDiff(currpart->head, pivot);
-		printf("diffb\n");
+		printf("%d\n", diffa);
+		printf("diffb (tail up to pivot) \th:%s\tp:%s\tt:%s\t", currpart->head->name, pivot->name, currpart->tail->name);
 		diffb = nodeDiff(pivot, currpart->tail);
 		printf("pivot: %s\tpart tail: %s\n", pivot->name, currpart->tail->name);
+		printf("%d\n", diffb);
+			
+			fixlist(list);
+			commandDisplay(list);
 
-		if(diffa > 1 && diffb > 1) {
+		if((diffa > 1) && (diffb > 1)) {
 			/* grow array */
-			printf("splitting parts\n");
-			/* ERROR IS WHEN PARTS ARE SPLIT - ARON IS AT START OF LIST BUT ARON
-			 * BECOMES TAIL OF A PART!!!
-			 *
-			 * IM TOO TIRED NOW
-			 *
-			 * I HOPE THAT HELPED FUTURE ME*/
+			printf("splitting parts %d\n", partsize);
+			tempnode = currpart->tail;
+
 			parts[partsize-1].head = currpart->head;
 			parts[partsize-1].tail = pivot->previousNode;
 
-			currnode = currpart->tail;/* using currnode as temp */
 			parts = realloc(parts, sizeof(*parts) * ++partsize);
 
 			parts[partsize-1].head = pivot->nextNode;
-			parts[partsize-1].tail = currnode;/* parts are being realloced so we need a temp var */
+			/* last part.tail = currpart->tail */
+			parts[partsize-1].tail = tempnode;/* parts are being realloced so we need a temp var */
+			printf("part %d: h-%s t-%s\n", partsize-2, parts[partsize-2].head->name, parts[partsize-2].tail->name);
+			printf("part %d: h-%s t-%s\n", partsize-1, parts[partsize-1].head->name, parts[partsize-1].tail->name);
 		} else if(diffa > 1) {
 			/* array stays the same */
-			printf("new, smaller part\n");
+			printf("new, smaller part %d\n", partsize);
 			parts[partsize-1].head = currpart->head;
 			parts[partsize-1].tail = pivot->previousNode;
 		} else if(diffb > 1) {
 			/* array stays the same */
-			printf("new, smaller part\n");
+			printf("new, smaller part %d\n", partsize);
 			parts[partsize-1].head = pivot->nextNode;
 			parts[partsize-1].tail = currpart->tail;
 		} else {
 			/* shrink array */
-			printf("eliminating last part\n");
+			printf("eliminating last part %d\n", partsize);
 			--partsize;
 			if(partsize == 0)
 				free(parts);
