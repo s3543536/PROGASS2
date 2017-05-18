@@ -499,6 +499,11 @@ void commandSort(
 	int diffa;
 	int diffb;
 
+	if(list->size < 1) {
+		printf("no elements to sort\n");
+		return;
+	}
+
 	/* allocate first parition */
 	parts = malloc(sizeof(*parts) * ++partsize);
 	parts[0].head = list->head;

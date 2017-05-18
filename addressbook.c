@@ -67,14 +67,7 @@ void menu() {
 	AddressBookList *list;
 	int (*compare)(const void*, const void*);
 
-/*
-#define COMMAND_SORT "sort"
-#define COMMAND_SORT_NAME "name"
-#define COMMAND_SORT_ID "id"
-#define COMMAND_QUIT "quit"
-*/
-
-/*
+/* NOT YET IMPLEMENTED
 #define COMMAND_FORWARD "forward"
 #define COMMAND_BACKWARD "backward"
 #define COMMAND_INSERT "insert"
@@ -86,6 +79,7 @@ void menu() {
 */
 
 	showStudentInformation();
+	printf("Available Commands:\nload\nunload\ndisplay\nsort\nquit\n");
 
 	list = createAddressBookList();
 	while(TRUE) {
