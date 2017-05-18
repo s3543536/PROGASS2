@@ -11,6 +11,7 @@
 #define BUFFER_SIZE 200
 
 /**
+ *
  * returns the contents of the file 'fname'
  *//*
 char* loadFileText(char* fname) {
