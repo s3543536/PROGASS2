@@ -449,21 +449,31 @@ char* partStr(Part * part) {
 	int size;
 	char *str;
 	char *substr;
+	Boolean free_substr = FALSE;
 
 	size = nodeDiff(part->head, part->tail);
 	str = malloc(sizeof(*str) * (size+1));
 
-	substr = charLine('-', size-2);
+	if(size <= 2) {
+		substr = "";
+	} else {
+		substr = charLine('-', size-2);
+		free_substr = TRUE;
+	}
 
-	if(size < 2) {
+	if(size < 1) {
+		sprintf(str, "%s", "");
+	} else if(size == 1) {
 		sprintf(str, "|");
 	} else {
 		sprintf(str, "|%s|", substr);
 	}
 
 	/*printf("\tPART: size: %d\t%s\n", size, str);*/
+	
+	if(free_substr)
+		free(substr);
 
-	free(substr);
 	return str;
 }
 

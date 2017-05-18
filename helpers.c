@@ -26,8 +26,11 @@ int minInt(int a, int b) {
 
 char* charLine(char c, int n) {
 	char* line;
-	line = malloc(sizeof(c) * (n+1));
-	memset(line, (int)c, sizeof(char) * (n+1));
+	
+	if(n < 1)
+		printf("\tERROR: making line with %d of %c\n", n, c);
+	line = malloc(sizeof(c) * (n+6));
+	memset(line, (int)c, sizeof(c) * (n+1));
 	line[n] = '\0';
 	return line;
 }
