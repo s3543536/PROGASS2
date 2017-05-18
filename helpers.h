@@ -33,6 +33,12 @@ typedef enum boolean
  **/
 void readRestOfLine();
 
+void strToLower(char* s);
+
+int parseInt(char* string, int* i);
+
+Boolean getStr(char* s, int size);
+
 /** creates a line of character c, of length n
  *
  * make sure you free the memory!

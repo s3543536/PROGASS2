@@ -1,5 +1,38 @@
 #include "helpers.h"
 
+int parseInt(char* string, int* i) {
+	char* stringEndPtr;
+
+	*i = strtol(string, &stringEndPtr, 10);
+	if(string == stringEndPtr || *stringEndPtr != '\0') {
+		/*printf("NaN\nend: %x\n", *stringEndPtr);*/
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+Boolean getStr(char* s, int size) {
+	int i;
+
+	fgets(s, size, stdin);
+	strToLower(s);
+
+	for(i = 0; i < size; i++) {
+		if(s[i] == '\n') {
+			/*printf("checkStr index (\\n): %d\n", i);*/
+			s[i] = '\0';/*trim the \n*/
+			if(s[0] == '\0')
+				return FALSE;
+			return TRUE;
+		}
+	}
+
+	readRestOfLine();
+	printf("Input too Long\n");
+	s[0] = '\0';
+	return FALSE;
+}
+
 void readRestOfLine()
 {
     int ch;
@@ -8,6 +41,13 @@ void readRestOfLine()
 
     /* Reset the error status of the stream. */
     clearerr(stdin);
+}
+
+void strToLower(char* s) {
+	int i;
+	for(i = 0; i < strlen(s); i++) {
+		s[i] = tolower(s[i]);
+	}
 }
 
 int maxInt(int a, int b) {
@@ -26,11 +66,15 @@ int minInt(int a, int b) {
 
 char* charLine(char c, int n) {
 	char* line;
-	
+
 	if(n < 1)
 		printf("\tERROR: making line with %d of %c\n", n, c);
-	line = malloc(sizeof(c) * (n+6));
-	memset(line, (int)c, sizeof(c) * (n+1));
+
+	line = malloc(sizeof(c) * (n+1));
+	if(line == NULL) {
+		printf("ERROR: malloc gave no memory");
+	}
+	memset(line, c, sizeof(c) * (n));
 	line[n] = '\0';
 	return line;
 }

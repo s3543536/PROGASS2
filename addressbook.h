@@ -3,5 +3,5 @@
 
 #include "commands.h"
 #include <stdio.h>
-
+void menu();
 #endif

@@ -9,28 +9,9 @@
 */
 #include <stdio.h>
 #define BUFFER_SIZE 200
-
-/**
- *
- * returns the contents of the file 'fname'
- *//*
-char* loadFileText(char* fname) {
-	FILE *file;
-	char buffer[BUFFER_SIZE];
-	char *fileText = NULL;
-	unsigned int size = 0;
-
-	file = fopen(fname, "r");
-	while(fgets(buffer, sizeof(char) * BUFFER_SIZE, file)) {
-		if(buffer[0] == '#')
-			continue;
-		fileText = realloc(fileText, (size_t)(BUFFER_SIZE * ++size));
-		strcat(fileText, buffer);
-
-	}
-	fclose(file);
-	return fileText;
-}*/
+#define STR_LEN 200
+#define STATE_UNLOADED 0
+#define DELIM " "
 
 void showStudentInformation() {
 	char* name = "Student Name: Angel English";
@@ -52,35 +33,7 @@ void printSize(AddressBookArray * arr, int i) {
 
 int main(int argc, char ** argv)
 {
-	/*AddressBookArray *array;
-	int i;
-	char *testPhone = "3543252366";*/
-	
 	AddressBookList *list;
-	/*int nodeCount = 1;
-	int i;
-	AddressBookNode *tempNode;
-	char tempStr[20];
-	char *testPhone = "3543252366";*/
-	showStudentInformation();
-
-	/*printf("creating list\n");*/
-	/*list = createAddressBookList();
-	commandDisplay(list);*/
-	/*printf("creating fake nodes\n");*/
-	/*for(i = 0; i < nodeCount; i++) {
-		sprintf(tempStr, "node: %d", i);
-		tempNode = createAddressBookNode(i, tempStr);
-		addTelephone(tempNode->array, "0123456789");
-		addTelephone(tempNode->array, "3423454346");
-		addTelephone(tempNode->array, testPhone);
-		addTelephone(tempNode->array, "3196432827");
-		removeTelephone(tempNode->array, testPhone);
-		insertNode(list, tempNode);
-	}*/
-	/*printf("sizeof array: %d\n", (int)sizeof(list->head->array));*/
-	/*commandDisplay(list);
-	freeAddressBookList(list);*/
 
 	list = commandLoad("sml.txt");
 	if(list == NULL)
@@ -94,31 +47,41 @@ int main(int argc, char ** argv)
 	commandDisplay(list);
 
 	freeAddressBookList(list);
-/*
-	list = createAddressBookList();
-	commandDisplay(list);*/
 
-	/*
-	array = createAddressBookArray();
-	printf("size: %d\n", (int)sizeof(*array));
-	addTelephone(array, "1234567890");
-	addTelephone(array, "0219874353");
-	addTelephone(array, testPhone);
-	addTelephone(array, "8921568302");
-	removeTelephone(array, testPhone);
-	printf("size: %d\n", (int)sizeof(*array));
-
-	printf("int: %d\n", array->size);
-	for(i = 0; i < array->size; i++) {
-		printf("string at %d: %s\n", i, array->telephones[i]);
-		printf("size: %d\n", (int)sizeof(array->telephones[i]));
-		printSize(array, i);
-	}
-
-	freeAddressBookArray(array);
-*/
-
-
+	menu();
 
     return EXIT_SUCCESS;
 }
+
+void menu() {
+	char ** tokens;
+	char str[STR_LEN];
+	int menu_state = STATE_UNLOADED;
+
+
+	for(;;) {
+
+		/*printMenu(menu_sate);*/
+		showStudentInformation();
+
+		if(getStr(str, STR_LEN)) {
+
+			/* tokens is the address of the first position */
+			tokens = h_token(str, DELIM);
+			
+			/*load command*/	
+			if(strcmp(COMMAND_LOAD, tokens[0]) == 0 && 
+					menu_state == STATE_UNLOADED) {
+			/*quit command*/
+			} else if(strcmp(COMMAND_QUIT, tokens[0]) == 0) {
+				free(tokens);
+				return;	
+			/*no command found*/
+			} else {
+				printf("Invalid Input\n");
+			}
+			free(tokens);
+		}
+	}
+}
+
