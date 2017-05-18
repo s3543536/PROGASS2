@@ -422,7 +422,7 @@ int nodeDiff(AddressBookNode * nodea, AddressBookNode * nodeb) {
 		/*printf("%s\t", nodeb->name);*/
 		nodeb = nodeb->previousNode;
 		i++;
-		if(i > 22) {
+		if(i > 600) {
 			printf("\t\tERROR: nodediff looped too many times");
 			return -1;
 		}
