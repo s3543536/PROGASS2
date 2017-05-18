@@ -101,6 +101,11 @@ AddressBookList * commandLoad(char * fileName, AddressBookList * adb)
 
 	printf("opening the file: %s\n", fileName);
 	file = fopen(fileName, "r");
+	if(file == NULL) {
+		printf("file %s not found\n", fileName);
+		return adb;
+	}
+
 	printf("loading...\n");
 	while(fgets(line, size, file)) {
 		err_line_count++;
