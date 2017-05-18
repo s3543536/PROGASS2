@@ -66,6 +66,8 @@ void menu() {
 	char str[STR_LEN];
 	AddressBookList *list;
 	int (*compare)(const void*, const void*);
+	char *endptr;
+	int moves;
 
 /* NOT YET IMPLEMENTED
 #define COMMAND_FORWARD "forward"
@@ -120,6 +122,26 @@ void menu() {
 
 				if(compare != NULL)
 					commandSort(list, compare);
+
+			/* forward */
+			} else if(strcmp(COMMAND_FORWARD, tokens[0]) == 0) {
+				if(tokens[1] != NULL) {
+					moves = strtol(tokens[1], endptr, 10);
+					if(endptr != NULL) {
+						commandForward(list, moves-1);
+					}
+				}
+				commandForward(list, 1);
+
+			/* backward */
+			} else if(strcmp(COMMAND_BACKWARD, tokens[0]) == 0) {
+				if(tokens[1] != NULL) {
+					moves = strtol(tokens[1], endptr, 10);
+					if(endptr != NULL) {
+						commandBackward(list, moves-1);
+					}
+				}
+				commandBackward(list, 1);
 
 			/*quit */
 			} else if(strcmp(COMMAND_QUIT, tokens[0]) == 0) {

@@ -5,23 +5,14 @@ PROGRAM=a.out
 FLAGS=-ansi -pedantic -Wall -g
 
 all: $(PROGRAM)
+
+%.o: %.c $(HEADERS)
+	gcc $(FLAGS) -c $< -o $@
+
 $(PROGRAM): $(OBJECTS)
-	gcc $(FLAGS) -o $(PROGRAM) $(OBJECTS)
+	gcc -o $@ $^
 
-addressbook.o: addressbook.c $(HEADERS)
-	gcc $(FLAGS) -c addressbook.c
-
-addressbook_list.o: addressbook_list.c $(HEADERS)
-	gcc $(FLAGS) -c addressbook_list.c
-
-addressbook_array.o: addressbook_array.c $(HEADERS)
-	gcc $(FLAGS) -c addressbook_array.c
-
-commands.o: commands.c $(HEADERS)
-	gcc $(FLAGS) -c commands.c
-
-helpers.o: helpers.c $(HEADERS)
-	gcc $(FLAGS) -c helpers.c
+.PHONY:clean archive
 
 clean:
 	rm $(PROGRAM) $(OBJECTS)

@@ -296,11 +296,24 @@ void commandDisplay(AddressBookList * list) {
 	printCharLine('-', headerLen);
 }
 
-void commandForward(AddressBookList * list, int moves)
-{ }
+void commandForward(AddressBookList * list, int moves) {
+	while(list->current != NULL && moves > 0) {
+			list->current = list->current->nextNode;
+			moves--;
+	}
+	if(list->current == NULL)
+		list->current = list->head;
+}
 
 void commandBackward(AddressBookList * list, int moves)
-{ }
+{
+	while(list->current != NULL && moves > 0) {
+		list->current = list->current->previousNode;
+		moves--;
+	}
+	if(list->current == NULL)
+		list->current = list->tail;
+}
 
 void commandInsert(AddressBookList * list, int id, char * name, char * telephone)
 { }
