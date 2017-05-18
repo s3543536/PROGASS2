@@ -445,6 +445,51 @@ void fixlist(AddressBookList * list) {
 	/*printf("list... fixed?\n");*/
 }
 
+char* partStr(Part * part) {
+	int size;
+	char *str;
+	char *substr;
+
+	size = nodeDiff(part->head, part->tail);
+	str = malloc(sizeof(*str) * (size+1));
+
+	substr = charLine('-', size-2);
+
+	if(size < 2) {
+		sprintf(str, "|");
+	} else {
+		sprintf(str, "|%s|", substr);
+	}
+
+	/*printf("\tPART: size: %d\t%s\n", size, str);*/
+
+	free(substr);
+	return str;
+}
+
+void printParts(Part * parts, int partsize, AddressBookList * list) {
+	int i;
+	char *str = NULL;
+	char *partstr;
+	int start = 1;
+
+	for(i = 0; i < partsize; i++) {
+		partstr = partStr(&parts[i]);
+		str = realloc(str, sizeof(*str) * (strlen(partstr) + (str == NULL ? 0 : strlen(str)) + 1));
+		if(start) {
+			start = 0;
+			sprintf(str, "%s", partstr);
+		} else {
+			sprintf(str, "%s%s", str, partstr);
+		}
+		free(partstr);
+	}
+
+	printf("%s\n", str);
+
+	free(str);
+}
+
 /* queeeeek sort */
 void commandSort(
     AddressBookList * list,
@@ -473,6 +518,7 @@ void commandSort(
 	/* god knows what it does to list->current */
 	/* it actually just points to the same node it did before sorting */
 	while(partsize > 0) {
+		printParts(parts, partsize, list);
 		/* choose part */
 		currpart = &parts[partsize-1];/* last part */
 		/* choose pivot */

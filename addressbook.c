@@ -81,7 +81,7 @@ int main(int argc, char ** argv)
 	/*commandDisplay(list);
 	freeAddressBookList(list);*/
 
-	list = commandLoad("lrg.txt");
+	list = commandLoad("sml.txt");
 	if(list == NULL)
 		return EXIT_FAILURE;
 	commandDisplayV(list);
