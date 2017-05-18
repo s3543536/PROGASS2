@@ -75,7 +75,7 @@ Boolean validateLine(char ** tokens) {
 	return TRUE;
 }
 
-AddressBookList * commandLoad(char * fileName)
+AddressBookList * commandLoad(char * fileName, AddressBookList * adb)
 {
     /**
      * Loads the given file and returns a new AddressBookList.
@@ -83,25 +83,6 @@ AddressBookList * commandLoad(char * fileName)
      * If the file doesn't exist or corruption is found in the file
      * then NULL is returned.
      */
-/*
-	AddressBookList *list;
-	AddressBookNode *node;
-	char *line[MAX_LINE_LENGTH];
-	FILE * fp;
-
-	list = createAddressBookList();
-
-	..read from file
-	..skip line with #
-	..tokenise the line
-	..id , name
-
-	...the create array is called in this function VVV
-	node = createAddressBookNode();
-	continue tokenise line for telephones
-		addTelephone(node->array, telephone);
-	insertNode(list, node);*/
-	AddressBookList * adb;
 	AddressBookNode * node;
 	FILE * file;
 	int size = MAX_LINE_LENGTH + NULL_SPACE;
@@ -113,7 +94,10 @@ AddressBookList * commandLoad(char * fileName)
 	int count = 0;
 	int err_line_count = 0;
 
-	adb = createAddressBookList();
+	if(adb->size > 0) {
+		printf("list is already loaded...\nmake sure to unload first\n");
+		return adb;
+	}
 
 	printf("opening the file: %s\n", fileName);
 	file = fopen(fileName, "r");
@@ -170,7 +154,8 @@ AddressBookList * commandLoad(char * fileName)
 
 void commandUnload(AddressBookList * list)
 {
-	freeAddressBookList(list);
+	freeAddressBookContents(list);
+	printf("your list is unloaded\n");
 }
 
 int getLongestName(AddressBookList * list) {
@@ -198,16 +183,6 @@ int getLongestID(AddressBookList * list) {
 
 	return maxInt(strlen(numStr), strlen("ID"));
 }
-
-#define POSLEN 3
-#define SERIALLEN 6
-#define TELEPHONELEN 10
-
-/* " | " * 4
-   "| "
-   " |"
-*/
-#define SPACINGLEN 16
 
 void commandDisplayV(AddressBookList * list) {
 	int serial = 0;

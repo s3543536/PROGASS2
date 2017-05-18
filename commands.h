@@ -22,13 +22,22 @@
 #define COMMAND_SAVE "save"
 #define COMMAND_QUIT "quit"
 
+#define POSLEN 3
+#define SERIALLEN 6
+#define TELEPHONELEN 10
+/* " | " * 4
+   "| "
+   " |"
+*/
+#define SPACINGLEN 16
+
 typedef struct part {
 	AddressBookNode *head;
 	AddressBookNode *tail;
 } Part;
 void commandDisplayV(AddressBookList * list);
 
-AddressBookList * commandLoad(char * fileName);
+AddressBookList * commandLoad(char * fileName, AddressBookList * adb);
 void commandUnload(AddressBookList * list);
 void commandDisplay(AddressBookList * list);
 void commandForward(AddressBookList * list, int moves);

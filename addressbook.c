@@ -10,7 +10,6 @@
 #include <stdio.h>
 #define BUFFER_SIZE 200
 #define STR_LEN 200
-#define STATE_UNLOADED 0
 #define DELIM " "
 
 void showStudentInformation() {
@@ -33,22 +32,31 @@ void printSize(AddressBookArray * arr, int i) {
 
 int main(int argc, char ** argv)
 {
-	AddressBookList *list;
+	AddressBookList *list = NULL;
 
-	list = commandLoad("sml.txt");
+	
+	menu();
+
+	return 1;
+	list = createAddressBookList();
+	commandLoad("sml.txt", list);
+
 	if(list == NULL)
 		return EXIT_FAILURE;
-	commandDisplayV(list);
+
+	commandDisplay(list);
 	/*printf("\nFREEING\n");*/
 
-	commandSort(list, compareName);
+	/*commandSort(list, compareName);
 	commandDisplay(list);
 	commandSort(list, compareID);
+	commandDisplay(list);*/
+	
+	commandUnload(list);
 	commandDisplay(list);
 
 	freeAddressBookList(list);
 
-	menu();
 
     return EXIT_SUCCESS;
 }
@@ -56,32 +64,95 @@ int main(int argc, char ** argv)
 void menu() {
 	char ** tokens;
 	char str[STR_LEN];
-	int menu_state = STATE_UNLOADED;
+	AddressBookList *list;
+	int (*compare)(const void*, const void*);
 
+/*
+#define COMMAND_SORT "sort"
+#define COMMAND_SORT_NAME "name"
+#define COMMAND_SORT_ID "id"
+#define COMMAND_QUIT "quit"
+*/
 
-	for(;;) {
+/*
+#define COMMAND_FORWARD "forward"
+#define COMMAND_BACKWARD "backward"
+#define COMMAND_INSERT "insert"
+#define COMMAND_ADD "add"
+#define COMMAND_FIND "find"
+#define COMMAND_DELETE "delete"
+#define COMMAND_REMOVE "remove"
+#define COMMAND_SAVE "save"
+*/
 
-		/*printMenu(menu_sate);*/
-		showStudentInformation();
+	showStudentInformation();
+
+	list = createAddressBookList();
+	while(TRUE) {
 
 		if(getStr(str, STR_LEN)) {
 
 			/* tokens is the address of the first position */
 			tokens = h_token(str, DELIM);
-			
-			/*load command*/	
-			if(strcmp(COMMAND_LOAD, tokens[0]) == 0 && 
-					menu_state == STATE_UNLOADED) {
-			/*quit command*/
+
+			/*load*/	
+			if(strcmp(COMMAND_LOAD, tokens[0]) == 0) {
+				commandLoad(tokens[1], list);
+
+			/* unload */
+			} else if(strcmp(COMMAND_UNLOAD, tokens[0]) == 0) {
+				commandUnload(list);
+
+			/* display */
+			} else if(strcmp(COMMAND_DISPLAY, tokens[0]) == 0) {
+				commandDisplay(list);
+
+			/* sort */
+			} else if(strcmp(COMMAND_SORT, tokens[0]) == 0) {
+				compare = NULL;
+				/* check tokens1 is there */
+				if(tokens[1] != NULL) {
+					/* check what command it is */
+					if(strcmp(COMMAND_SORT_NAME, tokens[1]) == 0) {
+						compare = compareName;
+					} else if(strcmp(COMMAND_SORT_ID, tokens[1]) == 0) {
+						compare = compareID;
+					} else {
+						printf("invalid sort condition. valid ones are:\nname\nid\n");
+					}
+				} else {
+					printf("invalid sort condition. valid ones are:\nname\nid\n");
+				}
+
+				if(compare != NULL)
+					commandSort(list, compare);
+
+			/*quit */
 			} else if(strcmp(COMMAND_QUIT, tokens[0]) == 0) {
 				free(tokens);
-				return;	
-			/*no command found*/
+				break;
+			/*not a command*/
 			} else {
 				printf("Invalid Input\n");
 			}
 			free(tokens);
 		}
 	}
+	freeAddressBookList(list);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

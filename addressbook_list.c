@@ -27,6 +27,25 @@ AddressBookList * createAddressBookList()
 
 }
 
+/* returns list to state when it was first created */
+void freeAddressBookContents(AddressBookList * list) {
+	if(list->size > 0) {
+		
+		while(list->tail != list->head) {
+			list->current = list->tail;
+			list->tail = list->current->previousNode;
+			freeAddressBookNode(list->current);
+			list->size--;
+		}
+		freeAddressBookNode(list->head);
+		list->size--;
+		if(list->size != 0) {
+			printf("\tERROR: freeAddressBookContents didnt work\nsize: %d\n", list->size);
+		}
+		list->head = list->tail = list->current = NULL;
+	}
+}
+
 void freeAddressBookList(AddressBookList * list)
 {
     /**
@@ -35,15 +54,7 @@ void freeAddressBookList(AddressBookList * list)
      * Note the freeAddressBookNode(...) function is used to free a node.
      */
 
-	if(list->head != NULL) {
-		while(list->tail != list->head) {
-			list->current = list->tail;
-			list->tail = list->current->previousNode;
-			freeAddressBookNode(list->current);
-		}
-		freeAddressBookNode(list->head);
-	}
-
+	freeAddressBookContents(list);
 	free(list);
 
 }
@@ -83,9 +94,21 @@ void freeAddressBookNode(AddressBookNode * node)
     * Note the freeAddressBookArray(...) function is used to free the array.
     */
 	freeAddressBookArray(node->array);
-	node->previousNode = NULL;
-	node->nextNode = NULL;
 	free(node);
+}
+
+/* checks to see if id is in the list 
+ * true if it is
+ */
+Boolean checkID(AddressBookList * list, int id) {
+	AddressBookNode *node = list->head;
+
+	while(node != NULL) {
+		if(id == node->id)
+			return TRUE;
+		node = node->nextNode;
+	}
+	return FALSE;
 }
 
 Boolean insertNode(AddressBookList * list, AddressBookNode * node)
@@ -98,10 +121,12 @@ Boolean insertNode(AddressBookList * list, AddressBookNode * node)
      */
 
 	/*inserts at tail*/
-	if(list->head == NULL) {
+	if(list->size == 0) {
 		/* empty list */
 		list->head = list->tail = list->current = node;
 	} else {
+		if(checkID(list, node->id))
+			return FALSE;
 		/* normal operation */
 		list->tail->nextNode = node;
 		node->previousNode = list->tail;
@@ -109,7 +134,7 @@ Boolean insertNode(AddressBookList * list, AddressBookNode * node)
 	}
 	list->size++;
 
-    return FALSE;
+    return TRUE;
 }
 
 Boolean deleteCurrentNode(AddressBookList * list)

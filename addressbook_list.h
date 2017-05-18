@@ -26,6 +26,12 @@ typedef struct addressBookList
 
 AddressBookList * createAddressBookList();
 void freeAddressBookList(AddressBookList * list);
+void freeAddressBookContents(AddressBookList * list);
+
+/* checks to see if id is in the list 
+ * true if it is
+ */
+Boolean checkID(AddressBookList * list, int id);
 
 AddressBookNode * createAddressBookNode(int id, char * name);
 void freeAddressBookNode(AddressBookNode * node);
