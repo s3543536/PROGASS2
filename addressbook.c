@@ -6,6 +6,7 @@
 * 
 * After the user enters a command, then the corresponding function is to be
 * called from commands.c, e.g., "forward" corresponds to "commandForward(...)".
+* test
 */
 #include <stdio.h>
 #define BUFFER_SIZE 200
