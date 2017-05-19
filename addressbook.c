@@ -61,6 +61,18 @@ int main(int argc, char ** argv)
     return EXIT_SUCCESS;
 }
 
+void printHelp() {
+	printf("available commands:\nhelp\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+			COMMAND_LOAD,
+			COMMAND_UNLOAD,
+			COMMAND_DISPLAY,
+			COMMAND_SORT,
+			COMMAND_FORWARD,
+			COMMAND_BACKWARD,
+			COMMAND_QUIT
+			);
+}
+
 void menu() {
 	char ** tokens;
 	char str[STR_LEN];
@@ -70,8 +82,6 @@ void menu() {
 	int moves;
 
 /* NOT YET IMPLEMENTED
-#define COMMAND_FORWARD "forward"
-#define COMMAND_BACKWARD "backward"
 #define COMMAND_INSERT "insert"
 #define COMMAND_ADD "add"
 #define COMMAND_FIND "find"
@@ -81,7 +91,8 @@ void menu() {
 */
 
 	showStudentInformation();
-	printf("Available Commands:\nload\nunload\ndisplay\nsort\nquit\n");
+	/*printf("Available Commands:\nload\nunload\ndisplay\nsort\nquit\nforward\nbackward\n");*/
+	printHelp();
 
 	list = createAddressBookList();
 	while(TRUE) {
@@ -126,9 +137,9 @@ void menu() {
 			/* forward */
 			} else if(strcmp(COMMAND_FORWARD, tokens[0]) == 0) {
 				if(tokens[1] != NULL) {
-					moves = strtol(tokens[1], endptr, 10);
+					moves = strtol(tokens[1], &endptr, 10);
 					if(endptr != NULL) {
-						commandForward(list, moves-1);
+						commandForward(list, moves);
 					}
 				}
 				commandForward(list, 1);
@@ -136,7 +147,7 @@ void menu() {
 			/* backward */
 			} else if(strcmp(COMMAND_BACKWARD, tokens[0]) == 0) {
 				if(tokens[1] != NULL) {
-					moves = strtol(tokens[1], endptr, 10);
+					moves = strtol(tokens[1], &endptr, 10);
 					if(endptr != NULL) {
 						commandBackward(list, moves-1);
 					}
@@ -147,9 +158,12 @@ void menu() {
 			} else if(strcmp(COMMAND_QUIT, tokens[0]) == 0) {
 				free(tokens);
 				break;
+			} else if(strcmp("help", tokens[0]) == 0) {
+				printHelp();
 			/*not a command*/
 			} else {
 				printf("Invalid Input\n");
+				printHelp();
 			}
 			free(tokens);
 		}
