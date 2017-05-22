@@ -128,8 +128,8 @@ AddressBookList * commandLoad(char * fileName, AddressBookList * adb)
 			fclose(file);
 			free(line);
 			free(tokens);
-			freeAddressBookList(adb);
-			return NULL;
+			freeAddressBookContents(adb);
+			return adb;
 		}
 
 		/* insert tokens into node */
@@ -329,8 +329,15 @@ void commandAdd(AddressBookList * list, char * telephone)
 void commandFind(AddressBookList * list, char * name)
 { }
 
-void commandDelete(AddressBookList * list)
-{ }
+void commandDelete(AddressBookList * list) {
+
+	if(deleteCurrentNode(list)) {
+		printf("Current node deleted\n");
+	} else {
+		printf("node not deleted\n");
+	}
+
+}
 
 void commandRemove(AddressBookList * list, char * telephone)
 { }

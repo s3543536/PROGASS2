@@ -63,13 +63,14 @@ int main(int argc, char ** argv)
 }
 
 void printHelp() {
-	printf("available commands:\nhelp\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+	printf("available commands:\nhelp\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
 			COMMAND_LOAD,
 			COMMAND_UNLOAD,
 			COMMAND_DISPLAY,
 			COMMAND_SORT,
 			COMMAND_FORWARD,
 			COMMAND_BACKWARD,
+			COMMAND_DELETE,
 			COMMAND_QUIT
 			);
 }
@@ -155,6 +156,8 @@ void menu() {
 				}
 				commandBackward(list, 1);
 
+			} else if(strcmp(COMMAND_DELETE, tokens[0]) == 0) {
+				commandDelete(list);
 			/*quit */
 			} else if(strcmp(COMMAND_QUIT, tokens[0]) == 0) {
 				free(tokens);

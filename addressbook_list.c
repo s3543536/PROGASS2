@@ -40,7 +40,7 @@ void freeAddressBookContents(AddressBookList * list) {
 		freeAddressBookNode(list->head);
 		list->size--;
 		if(list->size != 0) {
-			printf("\tERROR: freeAddressBookContents didnt work\nsize: %d\n", list->size);
+			printf("\tERROR: freeAddressBookContents didnt work\n\tlist size: %d\n", list->size);
 		}
 		list->head = list->tail = list->current = NULL;
 	}
@@ -147,8 +147,34 @@ Boolean deleteCurrentNode(AddressBookList * list)
      * If the list has no nodes (i.e., there is no current node)
      * then FALSE is returned.
      */
-    
-    return FALSE;
+	AddressBookNode * curr = list->current;
+
+	if(list->size < 1) {
+		printf("list is empty... can't delete a node\n");
+		return FALSE;
+	}
+	
+	if(list->current == list->head) {
+		/* at head */
+		list->head = curr->nextNode;
+		if(curr->nextNode != NULL)/* if size is 1 */
+			curr->nextNode->previousNode = NULL;
+		list->current = curr->nextNode;
+	} else if(list->current == list->tail) {
+		/* at tail */
+		list->tail = curr->previousNode;
+		curr->previousNode->nextNode = NULL;/* dont need to check for size being one because previous if handells it */
+		list->current = curr->previousNode;
+	} else {
+		/* middle */
+		curr->nextNode->previousNode = curr->previousNode;/* stitch up surrounding ptrs */
+		curr->previousNode->nextNode = curr->nextNode;/* stitch up surrounding ptrs */
+		list->current = curr->previousNode;
+	}
+
+	freeAddressBookNode(curr);
+	list->size--;
+    return TRUE;
 }
 
 Boolean forward(AddressBookList * list, int forward)
