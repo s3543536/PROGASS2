@@ -141,7 +141,7 @@ void menu() {
 				if(tokens[1] != NULL) {
 					moves = strtol(tokens[1], &endptr, 10);
 					if(endptr != NULL) {
-						commandForward(list, moves);
+						commandForward(list, moves-1);
 					}
 				}
 				commandForward(list, 1);
