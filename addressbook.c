@@ -82,6 +82,7 @@ void menu() {
 	int (*compare)(const void*, const void*);
 	char *endptr;
 	int moves;
+	char* str_bak = NULL;
 
 /* NOT YET IMPLEMENTED
 #define COMMAND_INSERT "insert"
@@ -100,6 +101,8 @@ void menu() {
 	while(TRUE) {
 
 		if(getStr(str, STR_LEN)) {
+			str_bak = realloc(str_bak, sizeof(*str_bak) * (strlen(str)+1));
+			strcpy(str_bak, str);
 
 			/* tokens is the address of the first position */
 			tokens = h_token(str, DELIM);
@@ -155,10 +158,15 @@ void menu() {
 					}
 				}
 				commandBackward(list, 1);
-
+			/* insert */
+			} else if(strcmp(COMMAND_INSERT, tokens[0]) == 0) {
+				/* remove 'insert ' word */
+				/* token by comma */
+				/* create node with data */
+			/* delete */
 			} else if(strcmp(COMMAND_DELETE, tokens[0]) == 0) {
 				commandDelete(list);
-			/*quit */
+			/* quit */
 			} else if(strcmp(COMMAND_QUIT, tokens[0]) == 0) {
 				free(tokens);
 				break;
