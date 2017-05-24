@@ -75,14 +75,42 @@ void printHelp() {
 			);
 }
 
+/* removes toRemove from str, shortens str */
+Boolean str_rem(char* str, char* toRemove) {
+	int strtIdx;
+	int endIdx;
+	/*printf("removing '%s' from '%s'\n", toRemove, str);*/
+
+	for(strtIdx = 0; ; strtIdx++) {
+		if(strncmp(str + strtIdx, toRemove, (int)strlen(toRemove)) == 0)
+			break;
+	}
+	endIdx = strtIdx + strlen(toRemove);
+
+	if((strtIdx >= (int)strlen(str))) {
+		printf("cannot find '%s'\n", toRemove);
+		return FALSE;
+	}
+
+	while(str[endIdx] != '\0') {
+		str[strtIdx++] = str[endIdx++];
+	}
+	str[strtIdx] = '\0';
+
+	/*printf("str now: '%s'\n", str);*/
+	return TRUE;
+}
+
 void menu() {
 	char ** tokens;
 	char str[STR_LEN];
+	char str_bak[STR_LEN];
 	AddressBookList *list;
 	int (*compare)(const void*, const void*);
 	char *endptr;
 	int moves;
-	char* str_bak = NULL;
+	int i;
+
 
 /* NOT YET IMPLEMENTED
 #define COMMAND_INSERT "insert"
@@ -101,7 +129,6 @@ void menu() {
 	while(TRUE) {
 
 		if(getStr(str, STR_LEN)) {
-			str_bak = realloc(str_bak, sizeof(*str_bak) * (strlen(str)+1));
 			strcpy(str_bak, str);
 
 			/* tokens is the address of the first position */
@@ -161,8 +188,13 @@ void menu() {
 			/* insert */
 			} else if(strcmp(COMMAND_INSERT, tokens[0]) == 0) {
 				/* remove 'insert ' word */
+				str_rem(str_bak, "insert ");
 				/* token by comma */
+				free(tokens);
+				tokens = h_token(str_bak, ",");
 				/* create node with data */
+				for(i = 0; tokens[i] != NULL; i++)
+					printf("%s\n", tokens[i]);
 			/* delete */
 			} else if(strcmp(COMMAND_DELETE, tokens[0]) == 0) {
 				commandDelete(list);
