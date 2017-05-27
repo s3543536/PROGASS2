@@ -6,6 +6,10 @@
 */
 
 char * h_concatPhones(AddressBookArray * array) {
+	return h_concatPhonesS(array, "%s, %s");
+}
+
+char * h_concatPhonesS(AddressBookArray * array, char* format) {
 	int commasLen = (array->size-1) * 2;
 	int allNumsLen = (TELEPHONE_LENGTH-1)*array->size + NULL_SPACE;
 	char * output = malloc(maxInt(commasLen + allNumsLen, 2));
@@ -24,7 +28,7 @@ char * h_concatPhones(AddressBookArray * array) {
 	sprintf(output, "%s", array->telephones[0]);
 	for(i = 1; i < array->size; i++) {
 		strcpy(outputCpy, output);
-		sprintf(output, "%s, %s", outputCpy, array->telephones[i]);
+		sprintf(output, format, outputCpy, array->telephones[i]);
 	}
 	free(outputCpy);
 	return output;
@@ -72,29 +76,27 @@ Boolean validateTelephone(char * telephone) {
 
 	/* not NULL */
 	if(telephone == NULL) {
-		printf("telephone is NULL\n");
+		aCharLine("telephone is NULL\n");
 		return FALSE;
 	}
 
 	/* is a number */
 	strtol(telephone, &endptr, 10);
 	if(*endptr != '\0') {
-		printf("telephone is not a number '%s'\n", endptr);
+		aCharLine("telephone is not a number\n");
 		return FALSE;
 	}
 
 	/* correct length */
 	if(strlen(telephone) + NULL_SPACE != TELEPHONE_LENGTH) {
-		printf("telephone is incorrect length: %d\n", (int)strlen(telephone));
-		printf("correct length: %d\n", TELEPHONE_LENGTH - NULL_SPACE);
+		aCharLine("telephone is incorrect length: %d, correct: %d\n", (int)strlen(telephone), TELEPHONE_LENGTH - NULL_SPACE);
 		return FALSE;
 	}
 
 	return TRUE;
 }
 
-Boolean addTelephone(AddressBookArray * array, char * telephone)
-{
+
     /**
      * Adds the provided telephone to the telephones array and returns TRUE.
      * 
@@ -120,10 +122,18 @@ Boolean addTelephone(AddressBookArray * array, char * telephone)
      * array->telephones[array->size] = newTelephone;
      * array->size++;
      */
+Boolean addTelephone(AddressBookArray * array, char * telephone)
+{
+
 	int pos = array->size;
 
 	if(!validateTelephone(telephone)) {
-		printf("Can't add invalid telephone: '%s'\n", telephone);
+		aCharLine("Can't add invalid telephone: '%s'\n", telephone);
+		return FALSE;
+	}
+
+	if(findTelephone(array, telephone)) {
+		aCharLine("telephone already in list\n");
 		return FALSE;
 	}
 
@@ -211,6 +221,8 @@ char * findTelephone(AddressBookArray * array, char * telephone)
      * If no telephone exists then NULL is returned.
      */
 	int i;
+	if(telephone == NULL)
+		return NULL;
 
 	for(i = 0; i < array->size; i++) {
 		/* the strings are in different locations so we cant just compare

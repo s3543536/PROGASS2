@@ -79,12 +79,6 @@ char* charLine(char c, int n) {
 	return line;
 }
 
-void printCharLine(char c, int n) {
-	char* line = charLine(c, n);
-	printf("%s\n", line);
-	free(line);
-}
-
 void token(char* str, char* delim, char **tokens, int* tokCount) {
 	int max = *tokCount;/*make tokCount the max number of tokens*/
 	*tokCount = 0;

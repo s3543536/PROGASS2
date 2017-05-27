@@ -40,7 +40,7 @@ void freeAddressBookContents(AddressBookList * list) {
 		freeAddressBookNode(list->head);
 		list->size--;
 		if(list->size != 0) {
-			printf("\tERROR: freeAddressBookContents didnt work\n\tlist size: %d\n", list->size);
+			aCharLine("\tERROR: freeAddressBookContents didnt work\n\tlist size: %d\n", list->size);
 		}
 		list->head = list->tail = list->current = NULL;
 	}
@@ -150,7 +150,7 @@ Boolean deleteCurrentNode(AddressBookList * list)
 	AddressBookNode * curr = list->current;
 
 	if(list->size < 1) {
-		printf("list is empty... can't delete a node\n");
+		aCharLine("list is empty... can't delete a node\n");
 		return FALSE;
 	}
 	
@@ -232,7 +232,7 @@ AddressBookNode * findByID(AddressBookList * list, int id)
      */
 	AddressBookNode * node = list->head;
 
-	while(node->id != id && node != NULL) {
+	while(node != NULL && node->id != id) {
 		node = node->nextNode;
 	}
 	return node;
@@ -248,12 +248,24 @@ AddressBookNode * findByName(AddressBookList * list, char * name)
     * If no node with a matching name exists then NULL is returned
     * and current remains unchanged.
     */
+	AddressBookNode n;
+	AddressBookNode * node = &n;
+	char* nameCpy = NULL;
 
-	AddressBookNode * node = list->head;
+	n.nextNode = list->head;
 
-	while(node->name != name && node != NULL) {
+	do {
 		node = node->nextNode;
-	}
+		if(node == NULL) {
+			break;/* cant use the while statement properly for this */
+		}
+		nameCpy = realloc(nameCpy, strlen(node->name) + NULL_SPACE);
+		strcpy(nameCpy, node->name);
+		strToLower(nameCpy);
+
+	} while(strcmp(nameCpy, name) != 0);
+
+	free(nameCpy);
 	return node;
 
 }
