@@ -111,7 +111,6 @@ void menu() {
 	int (*compare)(const void*, const void*);
 	char *endptr = NULL;
 	int moves;
-	int i;
 	int id;
 
 
@@ -234,10 +233,12 @@ void menu() {
 			/* add telephone */
 			} else if(strcmp(COMMAND_ADD, tokens[0]) == 0) {
 				/* TODO */
+				commandAdd(list, tokens[1]);
 
 			/* remove telephone */
 			} else if(strcmp(COMMAND_REMOVE, tokens[0]) == 0) {
 				/* TODO */
+				commandRemove(list, tokens[1]);
 
 			/* quit */
 			} else if(strcmp(COMMAND_QUIT, tokens[0]) == 0) {

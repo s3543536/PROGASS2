@@ -44,7 +44,7 @@ Boolean getStr(char* s, int size);
  * make sure you free the memory!
  */
 char* charLine(char c, int n);
-void printCharLine(char c, int n);
+char* alternativeCharLine(const char* fmt, ...);
 
 void tokenk(char* str, char* delim, char **tokens, int* tokCount);
 char ** h_token(char* str, char* delim);

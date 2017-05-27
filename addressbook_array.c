@@ -69,6 +69,7 @@ void freeAddressBookArray(AddressBookArray * array)
 
 Boolean validateTelephone(char * telephone) {
 	char* endptr = NULL;
+	char* m;
 
 	/* not NULL */
 	if(telephone == NULL) {
@@ -120,9 +121,15 @@ Boolean addTelephone(AddressBookArray * array, char * telephone)
      * array->size++;
      */
 	int pos = array->size;
+	char* m;
 
 	if(!validateTelephone(telephone)) {
 		printf("Can't add invalid telephone: '%s'\n", telephone);
+		return FALSE;
+	}
+
+	if(findTelephone(array, telephone)) {
+		printf("telephone already in list\n");
 		return FALSE;
 	}
 
@@ -210,6 +217,8 @@ char * findTelephone(AddressBookArray * array, char * telephone)
      * If no telephone exists then NULL is returned.
      */
 	int i;
+	if(telephone == NULL)
+		return NULL;
 
 	for(i = 0; i < array->size; i++) {
 		/* the strings are in different locations so we cant just compare

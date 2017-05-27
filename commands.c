@@ -32,7 +32,7 @@ int validatePhoneNumber(char * number) {
 	return TRUE;
 }
 
-/* 
+/* validates input file format
  * checks each token
  *
  * the last pointer in the array is set to NULL
@@ -199,12 +199,14 @@ void commandDisplayV(AddressBookList * list) {
 	char * phones;
 	char* prevname;
 	char* nextname;
+	char* line;
 
-	printCharLine('-', headerLen);
+	line = charLine('-', headerLen);
+	printf("%s\n", line);
 	printf("| Pos | Serial | %-*s | %-*s | Telephone  |\n", 
 			idLen, "ID", 
 			nameLen, "Name");
-	printCharLine('-', headerLen);
+	printf("%s\n", line);
 
 	if(node == NULL) {
 		/* print empty line */
@@ -244,11 +246,12 @@ void commandDisplayV(AddressBookList * list) {
 			node = node->nextNode;
 		}
 	}
-	printCharLine('-', headerLen);
+	printf("%s\n", line);
 	printf("| Total phone book entries: %-*d |\n", 
 			headerLen - (int)strlen("| Total phone book entries:  |"), 
 			serial);
-	printCharLine('-', headerLen);
+	printf("%s\n", line);
+	free(line);
 }
 
 void commandDisplay(AddressBookList * list) {
@@ -259,12 +262,14 @@ void commandDisplay(AddressBookList * list) {
 	int headerLen = nameLen+POSLEN+SERIALLEN+idLen+TELEPHONELEN+SPACINGLEN;
 	char * posStr = "";
 	char * phones;
+	char * line;
 
-	printCharLine('-', headerLen);
+	line = charLine('-', headerLen);
+	printf("%s\n", line);
 	printf("| Pos | Serial | %-*s | %-*s | Telephone  |\n", 
 			idLen, "ID", 
 			nameLen, "Name");
-	printCharLine('-', headerLen);
+	printf("%s\n", line);
 
 	if(node == NULL) {
 		/* print empty line */
@@ -289,11 +294,12 @@ void commandDisplay(AddressBookList * list) {
 			node = node->nextNode;
 		}
 	}
-	printCharLine('-', headerLen);
+	printf("%s\n", line);
 	printf("| Total phone book entries: %-*d |\n", 
 			headerLen - (int)strlen("| Total phone book entries:  |"), 
 			serial);
-	printCharLine('-', headerLen);
+	printf("%s\n", line);
+	free(line);
 }
 
 void commandForward(AddressBookList * list, int moves) {
@@ -323,8 +329,18 @@ void commandBackward(AddressBookList * list, int moves) {
 void commandInsert(AddressBookList * list, int id, char * name, char * telephone)
 { }
 
-void commandAdd(AddressBookList * list, char * telephone)
-{ }
+void commandAdd(AddressBookList * list, char * telephone) {
+	/* check for empty list */
+	if(list->size < 1) {
+		printf("phone book is empty, can't add a phone number\n");
+		return;
+	}
+	
+	/* add number */
+	if(!addTelephone(list->current->array, telephone)) {
+		printf("Can't add telehphone\n");
+	}
+}
 
 void commandFind(AddressBookList * list, char * name)
 { }
@@ -339,8 +355,18 @@ void commandDelete(AddressBookList * list) {
 
 }
 
-void commandRemove(AddressBookList * list, char * telephone)
-{ }
+void commandRemove(AddressBookList * list, char * telephone) {
+	/* check for empty list */
+	if(list->size < 1) {
+		printf("phone book is empty, can't remove a phone number\n");
+		return;
+	}
+	
+	/* remove number */
+	if(!removeTelephone(list->current->array, telephone)) {
+		printf("Can't remove telephone\n");
+	}
+}
 
 int partsize(Part *part) {
 	AddressBookNode *curr = part->head;
@@ -437,9 +463,9 @@ Boolean moveBefore(AddressBookNode * pos, AddressBookNode * toMove, Part * part)
 	return TRUE;
 }
 
-/**
- * this assumes nodea comes before nodeb
- */
+/** get distance between 2 nodes
+ * this assumes nodea comes before nodeb */
+#define aCharLine printf
 int nodeDiff(AddressBookNode * nodea, AddressBookNode * nodeb) {
 	int i = 0;
 
