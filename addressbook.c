@@ -63,11 +63,12 @@ int main(int argc, char ** argv)
 }
 
 void printHelp() {
-	printf("available commands:\nhelp\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+	printf("available commands:\nhelp\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
 			COMMAND_LOAD,
 			COMMAND_UNLOAD,
 			COMMAND_DISPLAY,
 			COMMAND_SORT,
+			COMMAND_INSERT,
 			COMMAND_FORWARD,
 			COMMAND_BACKWARD,
 			COMMAND_DELETE,
@@ -75,13 +76,44 @@ void printHelp() {
 			);
 }
 
+/* removes toRemove from str, shortens str */
+Boolean str_rem(char* str, char* toRemove) {
+	int strtIdx;
+	int endIdx;
+	/*printf("removing '%s' from '%s'\n", toRemove, str);*/
+
+	for(strtIdx = 0; ; strtIdx++) {
+		if(strncmp(str + strtIdx, toRemove, (int)strlen(toRemove)) == 0)
+			break;
+	}
+	endIdx = strtIdx + strlen(toRemove);
+
+	if((strtIdx >= (int)strlen(str))) {
+		printf("cannot find '%s'\n", toRemove);
+		return FALSE;
+	}
+
+	while(str[endIdx] != '\0') {
+		str[strtIdx++] = str[endIdx++];
+	}
+	str[strtIdx] = '\0';
+
+	/*printf("str now: '%s'\n", str);*/
+	return TRUE;
+}
+
 void menu() {
 	char ** tokens;
 	char str[STR_LEN];
+	char str_bak[STR_LEN];
 	AddressBookList *list;
+	AddressBookNode *node;
 	int (*compare)(const void*, const void*);
 	char *endptr;
 	int moves;
+	int i;
+	int id;
+
 
 /* NOT YET IMPLEMENTED
 #define COMMAND_INSERT "insert"
@@ -100,6 +132,7 @@ void menu() {
 	while(TRUE) {
 
 		if(getStr(str, STR_LEN)) {
+			strcpy(str_bak, str);
 
 			/* tokens is the address of the first position */
 			tokens = h_token(str, DELIM);
@@ -123,9 +156,15 @@ void menu() {
 				if(tokens[1] != NULL) {
 					/* check what command it is */
 					if(strcmp(COMMAND_SORT_NAME, tokens[1]) == 0) {
-						compare = compareName;
+						if(tokens[2] != NULL)
+							compare = compareNameR;
+						else
+							compare = compareName;
 					} else if(strcmp(COMMAND_SORT_ID, tokens[1]) == 0) {
-						compare = compareID;
+						if(tokens[2] != NULL)
+							compare = compareIDR;
+						else
+							compare = compareID;
 					} else {
 						printf("invalid sort condition. valid ones are:\nname\nid\n");
 					}
@@ -155,10 +194,38 @@ void menu() {
 					}
 				}
 				commandBackward(list, 1);
-
+			/* insert */
+			} else if(strcmp(COMMAND_INSERT, tokens[0]) == 0) {
+				/* remove 'insert ' word */
+				str_rem(str_bak, "insert ");
+				/* token by comma */
+				free(tokens);
+				tokens = h_token(str_bak, ",");
+				/* create node with data */
+				/*for(i = 0; tokens[i] != NULL; i++)
+					printf("%s\n", tokens[i]);*/
+				if(tokens[0] != NULL && tokens[1] != NULL) {
+					/* create node */
+					id = strtol(tokens[0], &endptr, 10);/*0 is id*/
+					if(endptr != NULL) {
+						endptr = NULL;
+						node = createAddressBookNode(id, tokens[1]);/* 1 is name */
+						insertNode(list, node);
+						/* add phone number to node */
+						if(tokens[2] != NULL) {/* 2 is phone */
+							if(!addTelephone(node->array, tokens[2]))
+								printf("Can't put telephone into Phone Book\n");
+						}
+					} else {
+						printf("Bad ID\n");
+					}
+				} else {
+					printf("requires valid id and name\n");
+				}
+			/* delete */
 			} else if(strcmp(COMMAND_DELETE, tokens[0]) == 0) {
 				commandDelete(list);
-			/*quit */
+			/* quit */
 			} else if(strcmp(COMMAND_QUIT, tokens[0]) == 0) {
 				free(tokens);
 				break;

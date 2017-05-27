@@ -360,6 +360,31 @@ int partsize(Part *part) {
 	return i;
 }
 
+/* assumes list size is greater than 1 */
+Boolean moveToHead(AddressBookNode * toMove, Part * part) {
+	/* stitch up toMove */
+	if(toMove->nextNode == NULL) {
+		/* at tail */
+		toMove->previousNode->nextNode = NULL;
+	} else if(toMove->previousNode == NULL) {
+		/* at head */
+		toMove->nextNode->previousNode = NULL;
+	} else {
+		/* normal */
+		toMove->previousNode->nextNode = toMove->nextNode;
+		toMove->nextNode->previousNode = toMove->previousNode;
+	}
+	/* move toMove into head pos */
+	toMove->nextNode = part->head;
+	toMove->previousNode = part->head->previousNode;
+	/* stitch up head */
+	if(part->head->previousNode != NULL)/* not at list head */
+		part->head->previousNode->nextNode = toMove;
+	part->head->previousNode = toMove;
+	part->head = toMove;
+	return TRUE;
+}
+
 Boolean moveBefore(AddressBookNode * pos, AddressBookNode * toMove, Part * part) {
 	/*printf("putting %s before %s\t", toMove->name, pos->name);
 	printf("\t%s was before %s\t\n", toMove->previousNode->name, toMove->name);*/
@@ -505,6 +530,18 @@ void printParts(Part * parts, int partsize, AddressBookList * list) {
 	free(str);
 }
 
+AddressBookNode * getPivot(Part * part) {
+	int diff = nodeDiff(part->head, part->tail)/2;
+	AddressBookNode * node = part->tail;
+	printf("getting pivot\n");
+
+	for(; diff >= 0; diff--) {
+		printf("diff: %d\n", diff);
+		node = node->previousNode;
+	}
+	return node;
+}
+
 /* queeeeek sort */
 void commandSort(
     AddressBookList * list,
@@ -602,6 +639,10 @@ void commandSort(
 	fixlist(list);
 }
 
+int compareNameR(const void * node, const void * otherNode) {
+	return -1*compareName(node, otherNode);
+}
+
 int compareName(const void * node, const void * otherNode)
 {
     /* Compare node name with otherNode name.
@@ -612,6 +653,10 @@ int compareName(const void * node, const void * otherNode)
      */
 	return strcmp(((AddressBookNode*)node)->name, 
 			((AddressBookNode*)otherNode)->name);
+}
+
+int compareIDR(const void * node, const void * otherNode) {
+	return -1*compareID(node, otherNode);
 }
 
 int compareID(const void * node, const void * otherNode)

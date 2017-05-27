@@ -51,7 +51,9 @@ void commandSort(
     AddressBookList * list,
     int sort(const void * node, const void * otherNode));
 int compareName(const void * node, const void * otherNode);
+int compareNameR(const void * node, const void * otherNode);
 int compareID(const void * node, const void * otherNode);
+int compareIDR(const void * node, const void * otherNode);
 void commandSave(AddressBookList * list, char * fileName);
 
 #endif
