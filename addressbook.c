@@ -109,17 +109,15 @@ void menu() {
 	AddressBookList *list;
 	AddressBookNode *node;
 	int (*compare)(const void*, const void*);
-	char *endptr;
+	char *endptr = NULL;
 	int moves;
 	int i;
 	int id;
 
 
 /* NOT YET IMPLEMENTED
-#define COMMAND_INSERT "insert"
 #define COMMAND_ADD "add"
 #define COMMAND_FIND "find"
-#define COMMAND_DELETE "delete"
 #define COMMAND_REMOVE "remove"
 #define COMMAND_SAVE "save"
 */
@@ -179,8 +177,9 @@ void menu() {
 			} else if(strcmp(COMMAND_FORWARD, tokens[0]) == 0) {
 				if(tokens[1] != NULL) {
 					moves = strtol(tokens[1], &endptr, 10);
-					if(endptr != NULL) {
+					if(*endptr == '\0') {
 						commandForward(list, moves-1);
+						endptr = NULL;
 					}
 				}
 				commandForward(list, 1);
@@ -189,13 +188,14 @@ void menu() {
 			} else if(strcmp(COMMAND_BACKWARD, tokens[0]) == 0) {
 				if(tokens[1] != NULL) {
 					moves = strtol(tokens[1], &endptr, 10);
-					if(endptr != NULL) {
+					if(*endptr == '\0') {
 						commandBackward(list, moves-1);
+						endptr = NULL;
 					}
 				}
 				commandBackward(list, 1);
 			/* insert */
-			} else if(strcmp(COMMAND_INSERT, tokens[0]) == 0) {
+			} else if(strcmp(COMMAND_INSERT, tokens[0]) == 0 && tokens[1] != NULL) {
 				/* remove 'insert ' word */
 				str_rem(str_bak, "insert ");
 				/* token by comma */
@@ -207,7 +207,7 @@ void menu() {
 				if(tokens[0] != NULL && tokens[1] != NULL) {
 					/* create node */
 					id = strtol(tokens[0], &endptr, 10);/*0 is id*/
-					if(endptr != NULL) {
+					if(*endptr == '\0') {
 						endptr = NULL;
 						node = createAddressBookNode(id, tokens[1]);/* 1 is name */
 						if(!insertNode(list, node)) {
