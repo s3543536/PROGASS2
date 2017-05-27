@@ -29,7 +29,6 @@ AddressBookList * createAddressBookList()
 
 /* returns list to state when it was first created */
 void freeAddressBookContents(AddressBookList * list) {
-	char* m;
 	if(list->size > 0) {
 		
 		while(list->tail != list->head) {
@@ -41,7 +40,7 @@ void freeAddressBookContents(AddressBookList * list) {
 		freeAddressBookNode(list->head);
 		list->size--;
 		if(list->size != 0) {
-			printf("\tERROR: freeAddressBookContents didnt work\n\tlist size: %d\n", list->size);
+			aCharLine("\tERROR: freeAddressBookContents didnt work\n\tlist size: %d\n", list->size);
 		}
 		list->head = list->tail = list->current = NULL;
 	}
@@ -149,10 +148,9 @@ Boolean deleteCurrentNode(AddressBookList * list)
      * then FALSE is returned.
      */
 	AddressBookNode * curr = list->current;
-	char* m;
 
 	if(list->size < 1) {
-		printf("list is empty... can't delete a node\n");
+		aCharLine("list is empty... can't delete a node\n");
 		return FALSE;
 	}
 	

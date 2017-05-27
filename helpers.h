@@ -52,4 +52,5 @@ char ** h_token(char* str, char* delim);
 int maxInt(int a, int b);
 int minInt(int a, int b);
 
+#define aCharLine printf
 #endif

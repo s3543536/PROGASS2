@@ -465,7 +465,6 @@ Boolean moveBefore(AddressBookNode * pos, AddressBookNode * toMove, Part * part)
 
 /** get distance between 2 nodes
  * this assumes nodea comes before nodeb */
-#define aCharLine printf
 int nodeDiff(AddressBookNode * nodea, AddressBookNode * nodeb) {
 	int i = 0;
 

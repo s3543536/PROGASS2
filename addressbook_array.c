@@ -69,32 +69,30 @@ void freeAddressBookArray(AddressBookArray * array)
 
 Boolean validateTelephone(char * telephone) {
 	char* endptr = NULL;
-	char* m;
 
 	/* not NULL */
 	if(telephone == NULL) {
-		printf("telephone is NULL\n");
+		aCharLine("telephone is NULL\n");
 		return FALSE;
 	}
 
 	/* is a number */
 	strtol(telephone, &endptr, 10);
 	if(*endptr != '\0') {
-		printf("telephone is not a number\n");
+		aCharLine("telephone is not a number\n");
 		return FALSE;
 	}
 
 	/* correct length */
 	if(strlen(telephone) + NULL_SPACE != TELEPHONE_LENGTH) {
-		printf("telephone is incorrect length: %d, correct: %d\n", (int)strlen(telephone), TELEPHONE_LENGTH - NULL_SPACE);
+		aCharLine("telephone is incorrect length: %d, correct: %d\n", (int)strlen(telephone), TELEPHONE_LENGTH - NULL_SPACE);
 		return FALSE;
 	}
 
 	return TRUE;
 }
 
-Boolean addTelephone(AddressBookArray * array, char * telephone)
-{
+
     /**
      * Adds the provided telephone to the telephones array and returns TRUE.
      * 
@@ -120,16 +118,18 @@ Boolean addTelephone(AddressBookArray * array, char * telephone)
      * array->telephones[array->size] = newTelephone;
      * array->size++;
      */
+Boolean addTelephone(AddressBookArray * array, char * telephone)
+{
+
 	int pos = array->size;
-	char* m;
 
 	if(!validateTelephone(telephone)) {
-		printf("Can't add invalid telephone: '%s'\n", telephone);
+		aCharLine("Can't add invalid telephone: '%s'\n", telephone);
 		return FALSE;
 	}
 
 	if(findTelephone(array, telephone)) {
-		printf("telephone already in list\n");
+		aCharLine("telephone already in list\n");
 		return FALSE;
 	}
 
