@@ -116,9 +116,6 @@ void menu() {
 
 
 /* NOT YET IMPLEMENTED
-#define COMMAND_ADD "add"
-#define COMMAND_FIND "find"
-#define COMMAND_REMOVE "remove"
 #define COMMAND_SAVE "save"
 */
 
@@ -146,6 +143,10 @@ void menu() {
 			/* display */
 			} else if(strcmp(COMMAND_DISPLAY, tokens[0]) == 0) {
 				commandDisplay(list);
+
+			/* find */
+			} else if(strcmp(COMMAND_FIND, tokens[0]) == 0) {
+				/* TODO */
 
 			/* sort */
 			} else if(strcmp(COMMAND_SORT, tokens[0]) == 0) {
@@ -194,6 +195,7 @@ void menu() {
 					}
 				}
 				commandBackward(list, 1);
+
 			/* insert */
 			} else if(strcmp(COMMAND_INSERT, tokens[0]) == 0 && tokens[1] != NULL) {
 				/* remove 'insert ' word */
@@ -224,15 +226,26 @@ void menu() {
 				} else {
 					printf("requires valid id and name\n");
 				}
+
 			/* delete */
 			} else if(strcmp(COMMAND_DELETE, tokens[0]) == 0) {
 				commandDelete(list);
+
+			/* add telephone */
+			} else if(strcmp(COMMAND_ADD, tokens[0]) == 0) {
+				/* TODO */
+
+			/* remove telephone */
+			} else if(strcmp(COMMAND_REMOVE, tokens[0]) == 0) {
+				/* TODO */
+
 			/* quit */
 			} else if(strcmp(COMMAND_QUIT, tokens[0]) == 0) {
 				free(tokens);
 				break;
 			} else if(strcmp("help", tokens[0]) == 0) {
 				printHelp();
+
 			/*not a command*/
 			} else {
 				printf("Invalid Input\n");
