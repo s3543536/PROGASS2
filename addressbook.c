@@ -63,15 +63,19 @@ int main(int argc, char ** argv)
 }
 
 void printHelp() {
-	printf("available commands:\nhelp\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+	printf("available commands:\nhelp\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
 			COMMAND_LOAD,
 			COMMAND_UNLOAD,
+			COMMAND_SAVE,
 			COMMAND_DISPLAY,
 			COMMAND_SORT,
+			COMMAND_FIND,
 			COMMAND_INSERT,
+			COMMAND_DELETE,
+			COMMAND_ADD,
+			COMMAND_REMOVE,
 			COMMAND_FORWARD,
 			COMMAND_BACKWARD,
-			COMMAND_DELETE,
 			COMMAND_QUIT
 			);
 }
@@ -115,7 +119,6 @@ void menu() {
 
 
 /* NOT YET IMPLEMENTED
-#define COMMAND_SAVE "save"
 */
 
 	showStudentInformation();
@@ -139,13 +142,55 @@ void menu() {
 			} else if(strcmp(COMMAND_UNLOAD, tokens[0]) == 0) {
 				commandUnload(list);
 
+			/* save */
+			} else if(strcmp(COMMAND_SAVE, tokens[0]) == 0) {
+				if(tokens[1] != NULL)
+					commandSave(list, tokens[1]);
+				else
+					printf("you need to put a file name\n");
+
 			/* display */
 			} else if(strcmp(COMMAND_DISPLAY, tokens[0]) == 0) {
 				commandDisplay(list);
 
 			/* find */
-			} else if(strcmp(COMMAND_FIND, tokens[0]) == 0) {
-				/* TODO */
+			} else if(strcmp(COMMAND_FIND, tokens[0]) == 0 && tokens[1] != NULL) {
+				if(strcmp("id", tokens[1]) == 0) {
+					if(tokens[2] == NULL) {/* validate tokens 2 */
+						printf("please type an id\n");
+						continue;
+					}
+
+					id = strtol(tokens[2], &endptr, 10); /* get id int */
+					if(*endptr == '\0') {
+						node = findByID(list, id);
+						if(node != NULL) {/* in list */
+							list->current = node;
+						} else {/* not in list */
+							printf("can't find node with id: '%d'\n", id);
+						}
+					} else {/* id isnt int */
+						printf("invalid ID\n");
+					}
+				} else if(strcmp(tokens[1], "name") == 0) {/* find by name */
+					if(tokens[2] == NULL) {/* validate tokens 2 */
+						printf("please type a name\n");
+						continue;
+					}
+
+					node = findByName(list, tokens[2]);
+					if(node != NULL)/* in the list */
+						list->current = node;
+					else/* not in list */
+						printf("can't find node with name: '%s'\n", tokens[2]);
+				} else {
+					/* assume tokens[1] is name */
+					node = findByName(list, tokens[1]);
+					if(node != NULL)/* its in the list */
+						list->current = node;
+					else/* not in the list */
+						printf("can't find node with name: '%s'\n", tokens[1]);
+				}
 
 			/* sort */
 			} else if(strcmp(COMMAND_SORT, tokens[0]) == 0) {

@@ -335,7 +335,7 @@ void commandAdd(AddressBookList * list, char * telephone) {
 		printf("phone book is empty, can't add a phone number\n");
 		return;
 	}
-	
+
 	/* add number */
 	if(!addTelephone(list->current->array, telephone)) {
 		printf("Can't add telehphone\n");
@@ -352,7 +352,6 @@ void commandDelete(AddressBookList * list) {
 	} else {
 		printf("node not deleted\n");
 	}
-
 }
 
 void commandRemove(AddressBookList * list, char * telephone) {
@@ -361,7 +360,7 @@ void commandRemove(AddressBookList * list, char * telephone) {
 		printf("phone book is empty, can't remove a phone number\n");
 		return;
 	}
-	
+
 	/* remove number */
 	if(!removeTelephone(list->current->array, telephone)) {
 		printf("Can't remove telephone\n");
@@ -698,5 +697,30 @@ int compareID(const void * node, const void * otherNode)
 	return ((AddressBookNode*)node)->id - ((AddressBookNode*)otherNode)->id;
 }
 
-void commandSave(AddressBookList * list, char * fileName)
-{ }
+void commandSave(AddressBookList * list, char * fileName) {
+	char* phones;
+	FILE * file;
+	AddressBookNode * node;
+	
+	if(list->size < 1) {
+		printf("the list has no phone numbers to save\n");
+		return;
+	}
+	/* open file */
+	printf("opening the file: %s\n", fileName);
+	file = fopen(fileName, "w");
+	for(node = list->head; node != NULL; node = node->nextNode) {
+		/* get phones in 1 string */
+		phones = h_concatPhonesS(node->array, "%s,%s");
+		/* write to file */
+		if(strlen(phones) < TELEPHONE_LENGTH - NULL_SPACE)
+			fprintf(file, "%d,%s\n", node->id, node->name);
+		else
+			fprintf(file, "%d,%s,%s\n", node->id, node->name, phones);
+		/* free mallocs */
+		free(phones);
+	}
+	/* close file */
+	printf("closing the file\n");
+	fclose(file);
+}

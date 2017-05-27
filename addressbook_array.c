@@ -6,6 +6,10 @@
 */
 
 char * h_concatPhones(AddressBookArray * array) {
+	return h_concatPhonesS(array, "%s, %s");
+}
+
+char * h_concatPhonesS(AddressBookArray * array, char* format) {
 	int commasLen = (array->size-1) * 2;
 	int allNumsLen = (TELEPHONE_LENGTH-1)*array->size + NULL_SPACE;
 	char * output = malloc(maxInt(commasLen + allNumsLen, 2));
@@ -24,7 +28,7 @@ char * h_concatPhones(AddressBookArray * array) {
 	sprintf(output, "%s", array->telephones[0]);
 	for(i = 1; i < array->size; i++) {
 		strcpy(outputCpy, output);
-		sprintf(output, "%s, %s", outputCpy, array->telephones[i]);
+		sprintf(output, format, outputCpy, array->telephones[i]);
 	}
 	free(outputCpy);
 	return output;
