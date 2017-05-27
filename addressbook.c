@@ -116,10 +116,8 @@ void menu() {
 
 
 /* NOT YET IMPLEMENTED
-#define COMMAND_INSERT "insert"
 #define COMMAND_ADD "add"
 #define COMMAND_FIND "find"
-#define COMMAND_DELETE "delete"
 #define COMMAND_REMOVE "remove"
 #define COMMAND_SAVE "save"
 */
@@ -197,7 +195,7 @@ void menu() {
 				}
 				commandBackward(list, 1);
 			/* insert */
-			} else if(strcmp(COMMAND_INSERT, tokens[0]) == 0) {
+			} else if(strcmp(COMMAND_INSERT, tokens[0]) == 0 && tokens[1] != NULL) {
 				/* remove 'insert ' word */
 				str_rem(str_bak, "insert ");
 				/* token by comma */

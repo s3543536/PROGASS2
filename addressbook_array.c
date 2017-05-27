@@ -79,14 +79,13 @@ Boolean validateTelephone(char * telephone) {
 	/* is a number */
 	strtol(telephone, &endptr, 10);
 	if(*endptr != '\0') {
-		printf("telephone is not a number '%s'\n", endptr);
+		printf("telephone is not a number\n");
 		return FALSE;
 	}
 
 	/* correct length */
 	if(strlen(telephone) + NULL_SPACE != TELEPHONE_LENGTH) {
-		printf("telephone is incorrect length: %d\n", (int)strlen(telephone));
-		printf("correct length: %d\n", TELEPHONE_LENGTH - NULL_SPACE);
+		printf("telephone is incorrect length: %d, correct: %d\n", (int)strlen(telephone), TELEPHONE_LENGTH - NULL_SPACE);
 		return FALSE;
 	}
 

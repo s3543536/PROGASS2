@@ -561,8 +561,11 @@ void commandSort(
 	int diffa;
 	int diffb;
 
-	if(list->size < 1) {
+	if(list->size == 0) {
 		printf("no elements to sort\n");
+		return;
+	} else if(list->size == 1) {
+		printf("can't sort a list of 1\n");
 		return;
 	}
 
