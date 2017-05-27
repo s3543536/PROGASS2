@@ -14,6 +14,8 @@ typedef struct addressBookArray
 AddressBookArray * createAddressBookArray();
 void freeAddressBookArray(AddressBookArray * array);
 
+Boolean validateTelephone(char * telephone);
+
 Boolean addTelephone(AddressBookArray * array, char * telephone);
 Boolean removeTelephone(AddressBookArray * array, char * telephone);
 

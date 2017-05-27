@@ -67,6 +67,32 @@ void freeAddressBookArray(AddressBookArray * array)
 	free(array);
 }
 
+Boolean validateTelephone(char * telephone) {
+	char* endptr = NULL;
+
+	/* not NULL */
+	if(telephone == NULL) {
+		printf("telephone is NULL\n");
+		return FALSE;
+	}
+
+	/* is a number */
+	strtol(telephone, &endptr, 10);
+	if(*endptr != '\0') {
+		printf("telephone is not a number '%s'\n", endptr);
+		return FALSE;
+	}
+
+	/* correct length */
+	if(strlen(telephone) + NULL_SPACE != TELEPHONE_LENGTH) {
+		printf("telephone is incorrect length: %d\n", (int)strlen(telephone));
+		printf("correct length: %d\n", TELEPHONE_LENGTH - NULL_SPACE);
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
 Boolean addTelephone(AddressBookArray * array, char * telephone)
 {
     /**
@@ -95,6 +121,11 @@ Boolean addTelephone(AddressBookArray * array, char * telephone)
      * array->size++;
      */
 	int pos = array->size;
+
+	if(!validateTelephone(telephone)) {
+		printf("Can't add invalid telephone: '%s'\n", telephone);
+		return FALSE;
+	}
 
 	/* grow array of pointers */
     array->telephones = realloc(array->telephones,
