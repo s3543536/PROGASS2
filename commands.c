@@ -103,6 +103,7 @@ AddressBookList * commandLoad(char * fileName, AddressBookList * adb)
 	file = fopen(fileName, "r");
 	if(file == NULL) {
 		printf("file %s not found\n", fileName);
+		free(line);
 		return adb;
 	}
 
