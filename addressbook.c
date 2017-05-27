@@ -210,7 +210,9 @@ void menu() {
 					if(endptr != NULL) {
 						endptr = NULL;
 						node = createAddressBookNode(id, tokens[1]);/* 1 is name */
-						insertNode(list, node);
+						if(!insertNode(list, node)) {
+							printf("can't insert node, id exists already\n");
+						}
 						/* add phone number to node */
 						if(tokens[2] != NULL) {/* 2 is phone */
 							if(!addTelephone(node->array, tokens[2]))
